@@ -8,6 +8,7 @@ Important: Before attempting the exercise, please ensure you have followed the i
 Now that we understand the fundamentals of NServiceBus is it time to host our solution and make it ready for production!
 
 In this exercise you'll learn:
+
 - How to host an NServiceBus endpoint in production as a windows service
 - Configure a non default logging framework and configure it to log outside of the deployment path
 - Understand the usage difference of endpoint create and endpoint start
