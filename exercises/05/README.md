@@ -1,20 +1,12 @@
-
-
-
-- Stoppen receiver, verstuur berichten met XML in de queue
-
 # Exercise 5: Message serialization, wire compatibility and type resolution
 
 Important: Before attempting the exercise, please ensure you have followed the instructions for preparing your machine and that you have read the instructions for running the exercise solutions.
-
 
 ## Overview
 
 In this exersice you will learn how to configure a serializer, how to configure multiple serializer in order to receive multiple wire formats and how you can use messages types that do not use the NServiceBus marker interfaces so that you can use POCO's.
 
-
 ## Exersize 5.1:  Naming conventions
-
 
 The Billing and Shipping endpoints needs to be subscribe to the `OrderPlaced` event published by Sales.
 
@@ -62,7 +54,6 @@ The following documentation can be used to help implement the solution.
 ### Step 1
 
 Run the current solution and see that the Billing is correctly subscribed to Sales. Send a few messages via ClientUI and notice how they are processed by Sales, which then publishes an event, which is processed by Billing.
-
 
 ### Step 2
 
