@@ -2,12 +2,8 @@
 using System.ComponentModel;
 using System.ServiceProcess;
 using System.Threading.Tasks;
-using AutoMapper;
-using Integration.Messages.Commands;
 using NServiceBus;
 using NServiceBus.Logging;
-using UserRegistration.Messages.Commands;
-using UserRegistration.Messages.Events;
 
 [DesignerCategory("Code")]
 class ProgramService : ServiceBase
@@ -61,8 +57,6 @@ class ProgramService : ServiceBase
             conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
             conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
 
-            routing.RouteToEndpoint(typeof(SendVerificationEmail).Assembly, "Integration");
-
             endpointConfiguration.EnableInstallers();
 
             endpoint = await Endpoint.Start(endpointConfiguration)
@@ -83,7 +77,6 @@ class ProgramService : ServiceBase
 
     void PerformStartupOperations()
     {
-        Mapper.Initialize(cfg => cfg.CreateMap<RegisterNewUser, UserVerificationStarted>());
     }
 
     Task OnCriticalError(ICriticalErrorContext context)

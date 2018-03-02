@@ -2,7 +2,6 @@
 
 namespace Integration.Handlers
 {
-    using System;
     using Integration.Messages.Commands;
     using Integration.Messages.Events;
     using NServiceBus;
