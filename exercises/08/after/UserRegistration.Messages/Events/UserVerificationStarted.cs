@@ -1,8 +1,8 @@
 ﻿namespace UserRegistration.Messages.Events
 {
-    using UserRegistration.Messages.Commands;
+    using UserRegistration.Messages.Entities;
 
-    public class UserVerificationStarted : RegisterNewUser
+    public class UserVerificationStarted : UserEntity
     {
     }
 }

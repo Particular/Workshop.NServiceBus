@@ -4,9 +4,6 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="automapper" Version="6.2.2" />
   </ItemGroup>
 </Project>

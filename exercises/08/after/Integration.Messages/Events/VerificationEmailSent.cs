@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Integration.Messages.Commands
+namespace Integration.Messages.Events
 {
-    public class VerifyEmailCode
+    public class VerificationEmailSent
     {
         public Guid UserId { get; set; }
         public string VerificationCode { get; set; }

@@ -10,23 +10,28 @@ namespace ClientUI
 
     class Program
     {
+        static IEndpointInstance endpointInstance;
+
         static async Task Main()
         {
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
             var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningCommandsAs(c => !string.IsNullOrEmpty(c.Namespace) && c.Namespace.EndsWith("Messages.Commands"));
+            conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+            conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
+
 
             var routing = transport.Routing();
             routing.RouteToEndpoint(typeof(RegisterNewUser).Assembly, "UserRegistration");
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration)
+            endpointInstance = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);
 
-            await RunLoop(endpointInstance);
+            await RunLoop();
 
             await endpointInstance.Stop()
                 .ConfigureAwait(false);
@@ -35,9 +40,10 @@ namespace ClientUI
         static ILog log = LogManager.GetLogger<Program>();
         static Random rnd = new Random();
 
-        static async Task RunLoop(IEndpointInstance endpointInstance)
+        static async Task RunLoop()
         {
-            log.Info("- Press 'R' to register a new user");
+            log.Info("- Press '1' to register a new user and confirm it.");
+            log.Info("- Press '2' to register a batch of 10 users.");
             log.Info("- Press 'Q' to quit.");
 
             while (true)
@@ -46,8 +52,14 @@ namespace ClientUI
 
                 switch (key.Key)
                 {
-                    case ConsoleKey.P:
-                        await RegisterNewUser(endpointInstance);
+                    case ConsoleKey.D1:
+                        Console.Write("\tEnter name: ");
+                        var name = RemoveWhitespace(Console.ReadLine());
+                        await RegisterNewUser(name);
+                        break;
+
+                    case ConsoleKey.D2:
+                        RegisterBatchOfUsers();
                         break;
 
                     case ConsoleKey.Q:
@@ -60,21 +72,31 @@ namespace ClientUI
             }
         }
 
-        private static Task RegisterNewUser(IEndpointInstance endpointInstance)
+
+        private static Task RegisterNewUser(string name)
         {
-            Console.Write("\tEnter name: ");
-            var name = RemoveWhitespace(Console.ReadLine());
 
             var command = new RegisterNewUser()
             {
                 UserId = Guid.NewGuid(),
                 Name = name,
-                Email = $"{name}@particular.net"
+                EmailAddress = $"{name}@particular.net"
             };
 
             Console.WriteLine($"\tAsked to register {name}");
 
             return endpointInstance.Send(command);
+        }
+
+        static void RegisterBatchOfUsers()
+        {
+            var random = new Random();
+            var users = new[] { "Dennis", "Ramon", "Mauro", "Adam", "Udi", "David", "Szymon", "Tomasz", "Sean", "Kim" };
+
+            Parallel.For(0, 10, i => 
+            {
+                RegisterNewUser(users[random.Next(9)]);
+            });
         }
 
         static string RemoveWhitespace(string name)

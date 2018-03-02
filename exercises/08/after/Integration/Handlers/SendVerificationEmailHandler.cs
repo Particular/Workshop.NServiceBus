@@ -4,23 +4,26 @@ namespace Integration.Handlers
 {
     using System;
     using Integration.Messages.Commands;
+    using Integration.Messages.Events;
     using NServiceBus;
+    using NServiceBus.Logging;
+
     public class SendVerificationEmailHandler : IHandleMessages<SendVerificationEmail>
     {
+        static ILog logger = LogManager.GetLogger<SendVerificationEmailHandler>();
+
         public Task Handle(SendVerificationEmail message, IMessageHandlerContext context)
         {
-            // Integrate with SMTP server
-            // Instead we'll fake delivery of the command from the website
-            var options = new SendOptions();
-            options.DelayDeliveryWith(TimeSpan.FromSeconds(10));
+            logger.Info($"Received {message.UserId} - {message.VerificationCode}");
 
-            var command = new VerifyEmailCode
+            // Integrate with SMTP server
+            var @event = new VerificationEmailSent
             {
                 UserId = message.UserId,
                 VerificationCode = message.VerificationCode
             };
 
-            return context.Send(message, options);
+            return context.Publish(@event);
         }
     }
 }

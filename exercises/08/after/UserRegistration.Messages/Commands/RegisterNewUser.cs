@@ -1,11 +1,8 @@
 ﻿namespace UserRegistration.Messages.Commands
 {
-    using System;
+    using UserRegistration.Messages.Entities;
 
-    public class RegisterNewUser
+    public class RegisterNewUser : UserEntity
     {
-        public Guid UserId { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
     }
 }

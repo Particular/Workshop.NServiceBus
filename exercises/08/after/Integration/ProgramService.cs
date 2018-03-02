@@ -28,7 +28,7 @@ class ProgramService : ServiceBase
                 Run(service);
                 return;
             }
-            Console.Title = "CRMIntegration";
+            Console.Title = "Integration";
             Console.CancelKeyPress += (sender, e) => { service.OnStop(); };
             service.OnStart(null);
             Console.WriteLine("\r\nPress enter key to stop program\r\n");
@@ -46,17 +46,20 @@ class ProgramService : ServiceBase
     {
         try
         {
-            var endpointConfiguration = new EndpointConfiguration("CRMIntegration");
+            var endpointConfiguration = new EndpointConfiguration("Integration");
 
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            if (Environment.UserInteractive && Debugger.IsAttached)
-            {
-                endpointConfiguration.UseTransport<LearningTransport>();
-                endpointConfiguration.UsePersistence<LearningPersistence>();
-                endpointConfiguration.EnableInstallers();
-            }
+            endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.UsePersistence<LearningPersistence>();
+
+            var conventions = endpointConfiguration.Conventions();
+            conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+            conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
+
+            endpointConfiguration.EnableInstallers();
+
             endpoint = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);
             PerformStartupOperations();

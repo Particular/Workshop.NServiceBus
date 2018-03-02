@@ -3,8 +3,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading.Tasks;
+using AutoMapper;
+using Integration.Messages.Commands;
 using NServiceBus;
 using NServiceBus.Logging;
+using UserRegistration.Messages.Commands;
+using UserRegistration.Messages.Events;
 
 [DesignerCategory("Code")]
 class ProgramService : ServiceBase
@@ -51,12 +55,17 @@ class ProgramService : ServiceBase
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            if (Environment.UserInteractive && Debugger.IsAttached)
-            {
-                endpointConfiguration.UseTransport<LearningTransport>();
-                endpointConfiguration.UsePersistence<LearningPersistence>();
-                endpointConfiguration.EnableInstallers();
-            }
+            var routing = endpointConfiguration.UseTransport<LearningTransport>().Routing();
+            endpointConfiguration.UsePersistence<LearningPersistence>();
+
+            var conventions = endpointConfiguration.Conventions();
+            conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+            conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
+
+            routing.RouteToEndpoint(typeof(SendVerificationEmail).Assembly, "Integration");
+
+            endpointConfiguration.EnableInstallers();
+
             endpoint = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);
             PerformStartupOperations();
@@ -75,6 +84,7 @@ class ProgramService : ServiceBase
 
     void PerformStartupOperations()
     {
+        Mapper.Initialize(cfg => cfg.CreateMap<RegisterNewUser, UserVerificationStarted>());
     }
 
     Task OnCriticalError(ICriticalErrorContext context)

@@ -5,13 +5,10 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="6.*" />
-    <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="1.*" />
-    <ProjectReference Include="..\CRMIntegration.Messages\Integration.Messages.csproj" />
+    <PackageReference Include="NServiceBus" Version="6.4.3" />
+    <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="1.2.0" />
+    <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj" />
     <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj" />
-    <Reference Include="AutoMapper">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\automapper\6.2.2\lib\net45\AutoMapper.dll</HintPath>
-    </Reference>
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
 </Project>
