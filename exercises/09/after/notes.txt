@@ -1,0 +1,13 @@
+## Exercise 9.1 step 5
+
+- Handler with long processing duration: 
+
+
+## Exercise 9.1 step 6
+
+Ways to increase the throughput:
+
+- Increase the concurrency limit
+- Move the endpoint to its own dedicated machine
+- Scale-up the dedicated server
+- Scale-out to multiple machines
