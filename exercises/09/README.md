@@ -29,7 +29,7 @@ We need to install some components and configure these to use a transport
 
 ### Step 1
 
-Setup *ServiceControl* , *ServiceControl Monitoring* , and *ServicePulse* as instructed in the [Monitoring Setup Tutorial](https://docs.particular.net/tutorials/monitoring-setup/):
+Setup *ServiceControl* , *ServiceControl Monitoring* , and *ServicePulse* as instructed in the [Monitoring Setup Tutorial](https://docs.particular.net/tutorials/monitoring-setup/) and **select MSMQ as the transport**.
 
 - https://docs.particular.net/tutorials/monitoring-setup/
 
@@ -83,7 +83,7 @@ Launch *ServiceInsight*.
 
 ### Step 2
 
-In the search enter message name "XXX" that was slowly processed in the previous exercise.
+In the search enter message name *SendVerificationReminderEmail* that was slowly processed in the previous exercise.
 
 ### Step 3
 
@@ -103,13 +103,17 @@ Documentation:
 
 ### Step 1
 
-Open project XXX.
+Open project *Integration*.
 
 ### Step 2
 
 Add the Nuget package `NServiceBus.CustomChecks` version **2.x.x**.
 
 ### Step 3
+
+Add a reference to `System.Net.Http` 
+
+### Step 4
 
 Add the following custom check code the project
 
@@ -165,13 +169,13 @@ class ThirdPartyMonitor
 
 
 
-### Step 4
+### Step 5
 
 Make sure the class inherits from the correct base class as can be found in the custom check documentation.
 
-### Step 5
+### Step 6
 
-Run the endpoints and open ServicePulse, see how the custom check is reporting its status on the custom check view.
+Run the endpoints and open *ServicePulse*, see how the custom check is reporting its status on the custom check view.
 
 
 
@@ -202,9 +206,7 @@ endpointConfiguration.SendHeartbeatTo(
 
 ### Step 3
 
-Verify if heartbeats are being send to ServiceControl by opening ServicePulse and see if the endpoints are listed on the heartbeats sc
-
-
+Verify if heartbeats are being send to ServiceControl by opening ServicePulse and see if the endpoints are listed on the heartbeats screen.
 
 ### Step 4
 
