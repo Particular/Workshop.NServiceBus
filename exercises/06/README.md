@@ -5,21 +5,20 @@ Important: Before attempting the exercise, please ensure you have followed the i
 
 ## Overview
 
-Now that we understand the fundamentals of NServiceBus is it time to host our solution and make it ready for production!
+Now that we understand the fundamentals of NServiceBus it is time to host our solution and make it ready for production!
 
 In this exercise you'll learn:
 
 - How to host an NServiceBus endpoint in production as a windows service
 - Configure a non default logging framework and configure it to log outside of the deployment path
-- Understand the usage difference of endpoint create and endpoint start
+- Understand the usage differences of endpoint create and endpoint start
 - Make the process compatible with automated deployments
-
 
 
 Advanced optional exercises:
 
 - Write errors to the windows event log
-- Write the log file to a different path to run least priviledge
+- Write the log file to a different path to run least-priviledge
 
 
 ## Exercise 6.1: Hosting as a Windows Service
@@ -38,7 +37,7 @@ Read the guidance on the *dotnet templates* and *nuget bootstrapping* for Window
 
 ### Step 2
 
-We already have existing projects neither the *dotnet templates* and *nuget bootstrapping* method will work on an existing project but we will use the template as inspiration.
+We already have existing projects, neither the *dotnet templates* and *nuget bootstrapping* method will work on an existing project but we will use the template as inspiration.
 
 Copy the `ProgramService.cs` into the Billing endpoint project:
 
@@ -204,11 +203,11 @@ Repeat the previous steps for the *Sales* and *Shipping* projects.
 
 ## Exercise 6.2: Running installers only during setup/installation
 
-The current endpoints always calls `endpointConfiguration.EnableInstallers()` which is not recommended for production. Processes often need additional permissions to create queues and storage schemas and in production you want to run least privileged.
+The current endpoints always calls `endpointConfiguration.EnableInstallers()` which is not recommended for production. Processes often need additional permissions to create queues and storage schemas and in production it is prefered to run least privileged.
 
 ### Step 1
 
-Open `ProgramService.cs` of Billing
+Open `ProgramService.cs` of Billing.
 
 ### Step 2
 
@@ -238,13 +237,13 @@ Repeat step 2 and 3 for *Sales* and *Shipping*.
 
 ## Exercise 6.2: Configure a custom logging framework
 
-The default logging feature only logs to a file and does not support filtering. In this exercise we are going to configure our endpoint to use **NLog**, and write log entries to a file on a path different then the deployed executable.
+The default logging feature only logs to a file and does not support filtering. In this exercise we are going to configure our endpoints to use **NLog**, and write log entries to a file on a path different then the deployed executable.
 
-It is important that the logging framework is configure before *any* NServiceBus code is invoked.
+It is important that the logging framework is configured before *any* NServiceBus code is invoked or else the default logger will be used.
 
 ### Step 1
 
-Add `NServiceBus.NLog` version 2.x.x package at the solution level to all projects.
+Add nuget package `NServiceBus.NLog` version 2.x.x at the solution level to all projects.
 
 ### Step 2
 
@@ -252,7 +251,7 @@ Open the `ProgramService.cs` from *Billing*.
 
 ### Step 2
 
-Add the following code to the correct location the currently opened `ProgramService.cs`:
+Add the following code to the correct location in the currently opened `ProgramService.cs`:
 
 ```c#
 NServiceBus.Logging.LogManager.Use<NLogFactory>();
@@ -286,21 +285,18 @@ Create an `App.config` and add the following NLog related snippets to the config
 
 ### Step 5
 
-Run the Billing endpoint, you should now have Debug output to the console. Also check the bin folder and see if it contains a file called `trace.log`.
+Run the Billing endpoint, you should now see Debug output to the console. Also check the bin folder and see if it contains a file called `trace.log`.
 
 
 ### Step 6
 
-NLog is configured to write log events asynchronous. We need to make sure that NLog gets the opportunity to flush all its log events when endpoint is terminated.
+NLog is configured to write log events asynchronously. We need to make sure that NLog gets the opportunity to flush all its log events when endpoint is terminated or else we risk to loose potentially important information of the last few things that happened.
 
-Open `ProgramService.cs` and add the following line to the `Exit` method
+Open `ProgramService.cs` and add the following line to the `Exit` method:
 
 ```c#
 NLog.LogManager.Shutdown();
 ```
-
-We also make sure that event log entries with level ERROR and FATAL are written to the windows event log.
-
 
 ## Exercise 6.3: Override host identifier
 
@@ -316,7 +312,7 @@ Documentation:
 
 ### Step 1
 
-Read the guidance and identify that by default is used to identify a endpoint instance.
+Read the guidance and identify what by default is used to identify an endpoint instance.
 
 ### Step 2
 
@@ -349,7 +345,7 @@ Based on the [guidance](https://docs.particular.net/nservicebus/hosting/override
 
 ## Advanced Exercise: 6.4: Log errors to the Windows Event Log
 
-Serious errors should be written to the Windows Event Log. We are already using NLog for logging and we configure it to log to the Windows Event Log.
+Serious errors are often written to the Windows Event Log. We are already using NLog for logging and now configure it to log to the Windows Event Log.
 
 ### Step 1
 
@@ -409,7 +405,7 @@ Add the following log filter to disable the `FirstChanceException` logger:
 
 In a production environment you would not log to the path where your application assemblies are deployed. The default logger has a `.Directory(string)` method to override the path but we can do something similar with NLog
 
-Documenation
+Documenation:
 
  - https://docs.particular.net/nservicebus/logging/
 
