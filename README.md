@@ -89,6 +89,12 @@ The startup projects are also listed in the instructions for each exercise. If y
 
 To run an exercise solution, simply press <kbd>F5</kbd> in Visual Studio. The exercise solution will now be running and fully functional.
 
+## Troubleshooting
+
+### Access denied exception with learning transport
+
+If you are getting access denied exceptions on the file system while running the exercises the cause is likely virusscanners, backup or file synchronisation software like dropbox or onedrive opening these files. Exclude the `.learningtransport` folder or temporarily disable these tools.
+
 ## Demos
 
 ### ServicePulse monitoring & recovery
