@@ -169,6 +169,7 @@ PublishScripts/
 # NuGet v3's project.json files produces more ignorable files
 *.nuget.props
 *.nuget.targets
+.nuget/
 
 # Microsoft Azure Build Output
 csx/
@@ -286,5 +287,9 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-.learningtransport
+
+# Visual studio user files
 *.DotSettings
+
+# NServiceBus LearningTransport
+.learningtransport/

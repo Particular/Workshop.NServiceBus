@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NServiceBus" Version="6.4.3" />
+    <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="1.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NServiceBus.Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\..\Users\dvdst\.nuget\packages\nservicebus.newtonsoft.json\1.2.0\lib\net452\NServiceBus.Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+  </ItemGroup>
+</Project>
