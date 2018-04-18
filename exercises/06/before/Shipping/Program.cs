@@ -26,7 +26,7 @@ namespace Shipping
         static IEndpointConfiguration CreateConfiguration()
         {
             var endpointConfiguration = new EndpointConfiguration("Shipping");
-            endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");

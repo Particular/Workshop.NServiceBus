@@ -13,7 +13,7 @@ namespace ClientUI
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
-            endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
