@@ -12,7 +12,7 @@ namespace Sales
             Console.Title = "Sales";
 
             var endpointConfiguration = new EndpointConfiguration("Sales");
-            endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");

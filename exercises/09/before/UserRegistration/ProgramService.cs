@@ -57,7 +57,7 @@ class ProgramService : ServiceBase
             var persistence = endpointConfiguration.UsePersistence<InMemoryPersistence>();
             var transport = endpointConfiguration.UseTransport<MsmqTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
-            //endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            //endpointConfiguration.AuditProcessedMessagesTo("audit");
 
 
             var conventions = endpointConfiguration.Conventions();

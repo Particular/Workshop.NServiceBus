@@ -26,7 +26,7 @@ namespace Billing
         static IEndpointConfiguration CreateConfiguration()
         {
             var endpointConfiguration = new EndpointConfiguration("Billing");
-            endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");

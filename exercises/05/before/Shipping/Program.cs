@@ -12,7 +12,7 @@ namespace Shipping
             Console.Title = "Shipping";
 
             var endpointConfiguration = new EndpointConfiguration("Shipping");
-            endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");

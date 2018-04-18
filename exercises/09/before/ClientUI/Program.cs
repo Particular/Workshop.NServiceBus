@@ -21,7 +21,7 @@ namespace ClientUI
             var persistence = endpointConfiguration.UsePersistence<InMemoryPersistence>();
             var transport = endpointConfiguration.UseTransport<MsmqTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
-            //endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            //endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));

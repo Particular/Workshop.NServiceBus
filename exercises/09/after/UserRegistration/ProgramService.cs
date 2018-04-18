@@ -57,7 +57,7 @@ class ProgramService : ServiceBase
             var persistence = endpointConfiguration.UsePersistence<InMemoryPersistence>();
             var transport = endpointConfiguration.UseTransport<MsmqTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
-            endpointConfiguration.ForwardReceivedMessagesTo("audit");
+            endpointConfiguration.AuditProcessedMessagesTo("audit");
             var metrics = endpointConfiguration.EnableMetrics();
             metrics.SendMetricDataToServiceControl("particular.monitoring", TimeSpan.FromSeconds(0.5));
             endpointConfiguration.SendHeartbeatTo(
