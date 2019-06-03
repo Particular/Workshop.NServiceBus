@@ -28,7 +28,7 @@ Compare the configurations of Billing and Shipping. Notice that Billing has a na
 
 ### Step 5
 
-Fix the configuration of Billing so that it will succesfully subscribe to the OrderPlaced event from Sales.
+Fix the configuration of Shipping so that it will succesfully subscribe to the OrderPlaced event from Sales.
 
 ### Step 6
 
