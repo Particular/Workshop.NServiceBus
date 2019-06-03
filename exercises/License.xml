@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<license id="d87a55e3-7937-4073-9223-dc823dc52558" expiration="2018-04-05T00:00:00.0000000" type="Trial" Applications="All" LicenseVersion="6.0" WorkerThreads="Max" AllowedNumberOfWorkerNodes="Max" LicenseType="Trial" MaxMessageThroughputPerSecond="Max">
-  <name>ramon.smits@particular.net</name>
+<license type="Trial" Applications="All" expiration="2019-07-03" id="c78429bd-1b60-4ca7-85b2-4ddab0977667">
+  <name>williel@gmail.com</name>
   <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
     <SignedInfo>
       <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
@@ -10,9 +10,9 @@
           <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
         </Transforms>
         <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <DigestValue>9CgfdjjCYjJP+4rp68X2HOgKhJA=</DigestValue>
+        <DigestValue>UTlYCYK5QjXMONNeTNq8rg8HmdE=</DigestValue>
       </Reference>
     </SignedInfo>
-    <SignatureValue>H7v+pphhyd1gdJx3bpXCfXDrZXHLag8bRmyuchURBL0qFQteLStKxt5M0KxttFIP13wPQ4j3ZJPDMh8FaRj97Ag+fayxRsqGJOVnq9XpTGxqSlB6/aW1WoOSccuoQFfu9+3n5/N8Rf1op7uHDBxju2bSygatSRy08HU47LD86g0=</SignatureValue>
+    <SignatureValue>OHEsCh0p2sltnffXqtlhYqk1d67l5hK24jXdjTLH0Ia6NFTaQpE3a26mdW9BLHT1O707AC+hWVDfNsF1tCRRWi2wbog3eoqN+ei3pkHugqRcnDGTfAfcOtJ8RJzfU3u8xmbTplRBy0bgrfZ9YJpYzT259dCWmBWc5Mvq1ERzSLg=</SignatureValue>
   </Signature>
 </license>
