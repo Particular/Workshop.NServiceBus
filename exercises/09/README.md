@@ -126,7 +126,7 @@ using NServiceBus.Logging;
 
 class ThirdPartyMonitor
 {
-    const string url = "http://nas.corp.nbraceit.com:5000";
+    const string url = "https://google.com";
     static ILog log = LogManager.GetLogger<ThirdPartyMonitor>();
 
     public ThirdPartyMonitor()
