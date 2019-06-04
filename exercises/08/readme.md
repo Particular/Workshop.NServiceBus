@@ -11,7 +11,7 @@ In this exercise you'll learn:
 - How sagas should delegate all the work to other handlers.
 - How timeouts can help when no messages arrive any longer.
 
-## Exercise 9.1
+## Exercise
 
 ### Step 1
 
