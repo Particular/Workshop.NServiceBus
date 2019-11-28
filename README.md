@@ -6,7 +6,6 @@ If you have any difficulty preparing your machine, or following this document, p
 
 - [Preparing your machine for the workshop](#preparing-your-machine-for-the-workshop)
 - [Running the exercise solutions](#running-the-exercise-solutions)
-- [Preparing your machine for the advanced exercises](#preparing-your-machine-for-the-advanced-exercises)
 - [Demos](#demos)
 - [FAQ](#faq)
 
@@ -70,8 +69,6 @@ Clone or download this repo. If you're downloading a zip copy of the repo, ensur
 * Click "OK"
 
 ### Build the exercise solutions
-
-TODO: This still needs to be added to the repository
 
 The exercises are contained in Visual Studio solutions under [exercises](exercises). All the solutions require NuGet package restore. This may be possible at the workshop venue (you can verify with the workshop organizers if internet access is available at the venue) but to ensure you can build the solutions during the workshop, we recommend you restore all NuGet packages and build all the solutions before the workshop starts. The simplest way to do this is to open a command prompt, navigate to your copy of this repo, and run `.\build.cmd exercises`. (For a full list of build targets, run `.\build.cmd -T`, or `.\build.cmd -h` for help.) You can safely ignore any compiler warnings.
 
