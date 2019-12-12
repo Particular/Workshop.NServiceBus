@@ -11,22 +11,11 @@ var vswhere = "../packages/vswhere.2.1.4/tools/vswhere.exe";
 var nuget = ".nuget/v4.3.0/NuGet.exe";
 string msBuild = null;
 
-var demoSolutions = Directory.EnumerateFiles("demos", "*.sln", SearchOption.AllDirectories);
 var exerciseSolutions = Directory.EnumerateFiles("exercises", "*.sln", SearchOption.AllDirectories);
 
 var targets = new TargetDictionary();
 
-targets.Add("default", DependsOn("demos", "exercises"));
-
-targets.Add(
-    "restore-demos",
-    () =>
-    {
-        foreach (var solution in demoSolutions)
-        {
-            Cmd(nuget, $"restore {solution}");
-        }
-    });
+targets.Add("default", DependsOn("exercises"));
 
 targets.Add(
     "restore-exercises",
@@ -41,17 +30,6 @@ targets.Add(
 targets.Add(
     "find-msbuild",
     () => msBuild = $"C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/MSBuild/Current/Bin/MSBuild.exe");
-
-targets.Add(
-    "demos",
-    DependsOn("find-msbuild", "restore-demos"),
-    () =>
-    {
-        foreach (var solution in demoSolutions)
-        {
-            Cmd(msBuild, $"{solution} /p:Configuration=Debug /nologo /m /v:m /nr:false");
-        }
-    });
 
 targets.Add(
     "exercises",
