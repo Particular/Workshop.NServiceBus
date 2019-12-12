@@ -255,6 +255,7 @@ Add the following code to the correct location in the currently opened `ProgramS
 
 ```c#
 NServiceBus.Logging.LogManager.Use<NLogFactory>();
+if(NLog.LogManager.Configuration==null) throw new Exception("Missing file NLog.config ");
 NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
 ```
 
