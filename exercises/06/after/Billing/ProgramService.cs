@@ -16,6 +16,7 @@ class ProgramService : ServiceBase
     static ProgramService()
     {
         LogManager.Use<NLogFactory>();
+        if(NLog.LogManager.Configuration==null) throw new Exception("Missing file `NLog.config`");
         NLog.LogManager.Configuration.DefaultCultureInfo = System.Globalization.CultureInfo.InvariantCulture;
         logger = LogManager.GetLogger<ProgramService>();
 
