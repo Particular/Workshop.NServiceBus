@@ -40,7 +40,7 @@ targets.Add(
 
 targets.Add(
     "find-msbuild",
-    () => msBuild = $"{ReadCmd(vswhere, "-latest -requires Microsoft.Component.MSBuild -property installationPath").Trim()}/MSBuild/15.0/Bin/MSBuild.exe");
+    () => msBuild = $"C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/MSBuild/Current/Bin/MSBuild.exe");
 
 targets.Add(
     "demos",
