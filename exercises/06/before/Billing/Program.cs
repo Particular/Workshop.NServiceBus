@@ -23,7 +23,7 @@ namespace Billing
                 .ConfigureAwait(false);
         }
 
-        static IEndpointConfiguration CreateConfiguration()
+        static EndpointConfiguration CreateConfiguration()
         {
             var endpointConfiguration = new EndpointConfiguration("Billing");
             endpointConfiguration.AuditProcessedMessagesTo("audit");
