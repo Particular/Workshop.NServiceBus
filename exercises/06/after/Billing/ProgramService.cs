@@ -107,7 +107,7 @@ class ProgramService : ServiceBase
 
         var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
-        endpointConfiguration.UseSerialization<JsonSerializer>();
+        endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
         endpointConfiguration.AddDeserializer<XmlSerializer>();
 
         var conventions = endpointConfiguration.Conventions();

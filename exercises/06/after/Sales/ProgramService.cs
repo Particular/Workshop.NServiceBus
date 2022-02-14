@@ -111,7 +111,7 @@ class ProgramService : ServiceBase
         var recoverability = endpointConfiguration.Recoverability();
         recoverability.Delayed(delayed => delayed.NumberOfRetries(0));
 
-        endpointConfiguration.UseSerialization<JsonSerializer>();
+        endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
         endpointConfiguration.AddDeserializer<XmlSerializer>();
 
         var conventions = endpointConfiguration.Conventions();
