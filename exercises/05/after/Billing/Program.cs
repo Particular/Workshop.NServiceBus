@@ -18,7 +18,7 @@ namespace Billing
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.EnableInstallers();
 
-            endpointConfiguration.UseSerialization<JsonSerializer>();
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
             var conventions = endpointConfiguration.Conventions();
