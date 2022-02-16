@@ -50,8 +50,8 @@ class ProgramService : ServiceBase
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            var persistence = endpointConfiguration.UsePersistence<InMemoryPersistence>();
-            var transport = endpointConfiguration.UseTransport<MsmqTransport>();
+            var persistence = endpointConfiguration.UsePersistence<LearningPersistence>();
+            var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.AuditProcessedMessagesTo("audit");
             endpointConfiguration.LimitMessageProcessingConcurrencyTo(10);

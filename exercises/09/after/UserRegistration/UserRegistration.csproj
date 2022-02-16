@@ -10,7 +10,6 @@
     <PackageReference Include="NServiceBus.Heartbeat" Version="3.0.1" />
     <PackageReference Include="NServiceBus.Metrics.ServiceControl" Version="3.0.6" />
     <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.3.0" />
-    <PackageReference Include="NServiceBus.Transport.Msmq" Version="1.2.0" />
     <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj" />
     <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj" />
     <Reference Include="System.ServiceProcess" />
