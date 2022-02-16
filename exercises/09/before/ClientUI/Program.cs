@@ -18,8 +18,8 @@ namespace ClientUI
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-            var persistence = endpointConfiguration.UsePersistence<InMemoryPersistence>();
-            var transport = endpointConfiguration.UseTransport<MsmqTransport>();
+            var persistence = endpointConfiguration.UsePersistence<LearningPersistence>();
+            var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
             //endpointConfiguration.AuditProcessedMessagesTo("audit");
 
@@ -96,7 +96,7 @@ namespace ClientUI
             var random = new Random();
             var users = new[] { "Dennis", "Ramon", "Mauro", "Adam", "Udi", "David", "Szymon", "Tomasz", "Sean", "Kim" };
 
-            Parallel.For(0, 10, i => 
+            Parallel.For(0, 10, i =>
             {
                 RegisterNewUser(users[random.Next(9)]);
             });

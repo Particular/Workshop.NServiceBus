@@ -54,8 +54,8 @@ class ProgramService : ServiceBase
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            var persistence = endpointConfiguration.UsePersistence<InMemoryPersistence>();
-            var transport = endpointConfiguration.UseTransport<MsmqTransport>();
+            var persistence = endpointConfiguration.UsePersistence<LearningPersistence>();
+            var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
             //endpointConfiguration.AuditProcessedMessagesTo("audit");
 
@@ -65,7 +65,6 @@ class ProgramService : ServiceBase
             conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
 
             var routing = transport.Routing();
-            routing.RegisterPublisher(typeof(UserVerificationStarted), "UserRegistration");
             routing.RouteToEndpoint(typeof(SendVerificationEmail).Assembly, "Integration");
 
             endpointConfiguration.EnableInstallers();
