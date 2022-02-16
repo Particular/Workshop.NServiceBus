@@ -105,19 +105,3 @@ If the answer to your question is not listed here, consult your on-site trainer.
 ### Can I use Windows 7?
 
 Yes. However, Visual Studio 2017 comes with SQL Server 2016 LocalDB, which is not compatible with Windows 7. Instead, you will need to install [SQL Server 2014 LocalDB](https://www.microsoft.com/en-us/download/details.aspx?id=42299). When prompted to choose which file to download, choose either the 64-bit or 32-bit version of `SqlLocalDB.msi`, depending on [your Windows installation](https://support.microsoft.com/en-gb/help/15056/windows-7-32-64-bit-faq).
-
-### How do I download the Particular Platform Installer with Microsoft Edge?
-
-When you attempt to download the installer, you may be presented with this message:
-
-![download prompt](https://github.com/Particular/Workshop/raw/master/img/platform-installer-on-edge/download-prompt.png?raw=true)
-
-If so, click on "View Downloads" to show the "Downloads" window:
-
-![download list](https://github.com/Particular/Workshop/raw/master/img/platform-installer-on-edge/downloads-list.png?raw=true)
-
-**Right-click** the red text "This unsafe download was blocked by SmartScreen Filter." to show the context menu:
-
-![download unsafe file](https://github.com/Particular/Workshop/raw/master/img/platform-installer-on-edge/download-unsafe-file-option.png?raw=true)
-
- Click "Download unsafe file".
