@@ -17,47 +17,19 @@ If you have any difficulty preparing your machine, or following this document, p
 
 ### Install the pre-requisites
 
-To complete the exercises, you require a Windows machine and Visual Studio. You must be using a Windows client edition, such as Windows 10, rather than a server edition, such as Windows Server 2016. The Particular Platform Installer does not support server editions of Windows.
+To complete the exercises, you require a Windows machine and Visual Studio.
 
 #### Visual Studio
 
-Install [Visual Studio 2017](https://www.visualstudio.com) (Community, Professional, or Enterprise) with the following workloads:
-  - .NET desktop development
-  - ASP.NET and web development
+Install [Visual Studio 2019](https://www.visualstudio.com) or later (Community, Professional, or Enterprise) with the following workloads:
 
-#### MSMQ and DTC
+- .NET desktop development
+- ASP.NET and web development
 
-To ensure MSMQ and DTC are correctly installed, use the [Particular Platform Installer](https://particular.net/start-platform-download) in the following step.
+The following frameworks needs to be installed:
 
-NOTE: If you are using Microsoft Edge, see [the FAQ](#how-do-i-download-the-particular-platform-installer-with-microsoft-edge).
-
-In the installation screen, select a minimum of:
-
-- "Configure MSDTC for NServiceBus"
-- "Configure Microsoft Message Queuing"
-
-#### Particular Software Platform
-
-While installing the Particular Software Platform, we will also make sure MSMQ and MSDTC (Microsoft Distributed Transaction Coordinator) are correctly installed.
-
-1. Download the [Particular Service Platform](https://particular.net/start-platform-download) and start it.
-2. Select every single item that is not installed yet. This includes ServiceControl, ServicePulse and ServiceInsight. But also MSMQ and MSDTC if it has not been installed yet.
-3. When installation has completed, click "Start ServiceControl Management". You may now close the Particular Service Platform Installation window.
-
-In the ServiceControl Management window, click "Add new instance".
-
-In the settings for the new instance, there are two choices you must make:
-
-- "Transport": choose "MSMQ".
-- "Audit forwarding": choose "Off".
-
-All other settings should be left with their default values.
-
-Click "Add".
-
-After the instance has been added, make a note of the name of the instance. This will usually be "Particular.ServiceControl".
-
-You may now close the ServiceControl Management window.
+- .NET Framework 4.6.1
+- .NET Core 3.1
 
 ### Get a copy of this repository
 
@@ -101,7 +73,3 @@ The [self contained platform demo](https://docs.particular.net/tutorials/monitor
 ## FAQ
 
 If the answer to your question is not listed here, consult your on-site trainer.
-
-### Can I use Windows 7?
-
-Yes. However, Visual Studio 2017 comes with SQL Server 2016 LocalDB, which is not compatible with Windows 7. Instead, you will need to install [SQL Server 2014 LocalDB](https://www.microsoft.com/en-us/download/details.aspx?id=42299). When prompted to choose which file to download, choose either the 64-bit or 32-bit version of `SqlLocalDB.msi`, depending on [your Windows installation](https://support.microsoft.com/en-gb/help/15056/windows-7-32-64-bit-faq).
