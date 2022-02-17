@@ -1,9 +1,10 @@
-# Exercise 2: Sending a command
+# Exercise 2: Multiple endpoints
 
-Follow the steps on: https://docs.particular.net/tutorials/nservicebus-step-by-step/2-sending-a-command/
+Follow the steps on: https://docs.particular.net/tutorials/nservicebus-step-by-step/3-multiple-endpoints/
 
 What changed?
-- Created a Messages assembly
-- Created a command
-- Created a handler
-- Send a message
+- Created a new endpoint, Sales
+- Start the Sales endpoint
+- Moved the handler to the Sales endpoint
+- Send to the new Sales endpoint
+- Set multiple startup projects

@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Messages.Events;
+using Messages;
 using NServiceBus;
 using NServiceBus.Logging;
 
-namespace Shipping
+namespace Billing
 {
     public class OrderPlacedHandler : IHandleMessages<OrderPlaced>
     {
@@ -11,8 +11,13 @@ namespace Shipping
 
         public Task Handle(OrderPlaced message, IMessageHandlerContext context)
         {
-            log.Info($"Received OrderPlaced, OrderId = {message.OrderId} - Should we ship now?");
-            return Task.CompletedTask;
+            log.Info($"Received OrderPlaced, OrderId = {message.OrderId} - Charging credit card...");
+
+            var orderBilled = new OrderBilled
+            {
+                OrderId = message.OrderId
+            };
+            return context.Publish(orderBilled);
         }
     }
 }

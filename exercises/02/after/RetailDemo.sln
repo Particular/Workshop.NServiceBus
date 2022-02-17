@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUI", "ClientUI\Client
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messages.csproj", "{54EF6F7D-74D7-4C90-9BB3-4D8FD6CE0A25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sales", "Sales\Sales.csproj", "{5BBC94D1-AADC-4331-98D4-12F174361FB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,6 +18,8 @@ Global
 		{D4DCF868-A625-4B0B-BB20-C150553A6548}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54EF6F7D-74D7-4C90-9BB3-4D8FD6CE0A25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{54EF6F7D-74D7-4C90-9BB3-4D8FD6CE0A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BBC94D1-AADC-4331-98D4-12F174361FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BBC94D1-AADC-4331-98D4-12F174361FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

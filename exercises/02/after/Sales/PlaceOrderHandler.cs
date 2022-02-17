@@ -5,29 +5,14 @@ using NServiceBus.Logging;
 
 namespace Sales
 {
-    using System;
-
     public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
     {
         static ILog log = LogManager.GetLogger<PlaceOrderHandler>();
-        static Random random = new Random();
 
         public Task Handle(PlaceOrder message, IMessageHandlerContext context)
         {
-            // throw new Exception("BOOM");
-
-            if (random.Next(0, 5) == 0)
-            {
-                throw new Exception("Oops");
-            }
-
             log.Info($"Received PlaceOrder, OrderId = {message.OrderId}");
-
-            var orderPlaced = new OrderPlaced
-            {
-                OrderId = message.OrderId
-            };
-            return context.Publish(orderPlaced);
+            return Task.CompletedTask;
         }
     }
 }

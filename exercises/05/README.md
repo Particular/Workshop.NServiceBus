@@ -6,7 +6,7 @@ Important: Before attempting the exercise, please ensure you have followed the i
 
 In this exersice you will learn how to configure a serializer, how to configure multiple serializer in order to receive multiple wire formats and how you can use messages types that do not use the NServiceBus marker interfaces so that you can use POCO's.
 
-## Exersize 5.1:  Naming conventions
+## Exercize 5.1:  Naming conventions
 
 The Billing and Shipping endpoints needs to be subscribe to the `OrderPlaced` event published by Sales.
 
