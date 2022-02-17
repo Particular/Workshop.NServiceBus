@@ -6,8 +6,7 @@ using NServiceBus.Logging;
 
 namespace Billing
 {
-    public class OrderPlacedHandler :
-        IHandleMessages<OrderPlaced>
+    public class OrderPlacedHandler : IHandleMessages<OrderPlaced>
     {
         static ILog log = LogManager.GetLogger<OrderPlacedHandler>();
 

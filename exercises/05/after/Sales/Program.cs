@@ -18,9 +18,6 @@ namespace Sales
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.EnableInstallers();
 
-            var recoverability = endpointConfiguration.Recoverability();
-            recoverability.Delayed(delayed => delayed.NumberOfRetries(0));
-
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 

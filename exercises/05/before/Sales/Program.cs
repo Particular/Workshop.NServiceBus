@@ -18,15 +18,6 @@ namespace Sales
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.EnableInstallers();
 
-            var recoverability = endpointConfiguration.Recoverability();
-            recoverability.Delayed(delayed => delayed.NumberOfRetries(0));
-
-            var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningEventsAs(
-                type =>
-                type == typeof(OrderPlaced)
-                );
-
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);
 

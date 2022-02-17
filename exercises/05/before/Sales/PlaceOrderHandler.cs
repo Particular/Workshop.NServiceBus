@@ -9,8 +9,7 @@ using NServiceBus.Logging;
 
 namespace Sales
 {
-    public class PlaceOrderHandler :
-        IHandleMessages<PlaceOrder>
+    public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
     {
         static ILog log = LogManager.GetLogger<PlaceOrderHandler>();
 
@@ -19,9 +18,6 @@ namespace Sales
             log.Info($"Received PlaceOrder, OrderId = {message.OrderId}");
 
             // This is normally where some business logic would occur
-
-            // Uncomment to test throwing a systemic exception
-            //throw new Exception("BOOM");
 
             var orderPlaced = new OrderPlaced
             {
