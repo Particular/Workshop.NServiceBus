@@ -14,12 +14,14 @@ namespace Sales
 
         public Task Handle(PlaceOrder message, IMessageHandlerContext context)
         {
+            // Uncomment to test a systemic exception
             // throw new Exception("BOOM");
 
-            if (random.Next(0, 5) == 0)
-            {
-                throw new Exception("Oops");
-            }
+            // Uncomment to test a transient exception
+            // if (random.Next(0, 5) == 0)
+            // {
+            //     throw new Exception("Oops");
+            // }
 
             log.Info($"Received PlaceOrder, OrderId = {message.OrderId}");
 
