@@ -2,13 +2,13 @@
 
 In this exercise we'll investigate a different way of mimicking priority queues through publish/subscribe. This way the publisher is not aware of a message, customer or anything being either a regular or a priority message. Two (or more) receiving endpoints will decide if the incoming message is a regular or priority message.
 
-Endpoints that have to deal with a very high throughput, this method can be a downside, since both endpoints will receive each message separately. The benefit is that we now have options related to each endpoint, since they have their own queue, can be scaled out independently, etc.
+For endpoints that have to deal with very high throughput, this may not be the best solution, since both endpoints will receive each message separately. The main benefit we gain here, is the loose coupling. The business requirements of Billing are not leaked into the Sales endpoint. An additional benefit is that, since they each have their own queue, they can be scaled out independently, etc.
 
-In the end it's always a trade-off. In this case it **could be** more loosely coupled endpoints versus better throughput through less messages. Each scenario is unique though and needs to be considered separately.
+In the end it's always a trade-off. Each scenario is unique though and needs to be considered separately.
 
 ## Overview
 
-In this exercise we'll differentiate between regular customers and strategic customers and deal with each in their own endpoint. However without the sending endpoint knowing which customer is regular or strategic.
+In this exercise we'll differentiate between regular customers and strategic customers and deal with each in their own endpoint. However, we want the sending endpoint to be agnostic of any differentiation that needs to be made based on customer-specific information.
 
 You'll learn:
 
@@ -22,7 +22,7 @@ You'll learn:
 - In the solution check the `Sales` endpoint, specifically the class `PlaceOrderHandler`.
   - It receives a `PlaceOrder` command.
   - It immediately publishes an `OrderPlaced` event.
-    This is the event that from Billing its perspective, is either a *regular* or a *strategic* customer. As you can tell, this `Sales` endpoint has no knowledge if it is either one or the other.
+    For the Billign endpoint, it matters whether the order that was placed was for a *regular* or a *strategic* customer. As you can tell, the `Sales` endpoint has no knowledge of this.
 
 ### Step 2
 
@@ -32,7 +32,7 @@ You'll learn:
 
 ### Step 3
 
-- In the file system, make a copy of the `Billing` endpoint.
+- On the file system, make a copy of the `Billing` endpoint.
   - Conveniently, on the file system the folder is already named `Billing.Regular`.
   - The new folder should be named `Billing.Strategic`.
 - In Visual Studio first rename the current `Billing` project to `Billing.Regular`.
@@ -47,36 +47,36 @@ Now both projects will automatically subscribe to the `OrderPlaced` event and pr
 
 We need to make sure both differentiate between *regular* and *strategic* customers.
 
-- There is another project in the solution called `Billing.Shared`. Add it as a reference to both `Billing.Regular` and `Billing.Strategic`.
-- In the handler, create a static `List<int>` called `stategicCustomers` and fill this by calling `Customers.GetStrategicCustomers()` from the added project.
-  - This way the list is only retrieved once. In memory it's lighting fast but if we theoretically retrieve this list from a datastore, we do not want to load the list every single time.
+- There is another project in the solution called `Billing.Shared`. Reference it from both `Billing.Regular` and `Billing.Strategic`.
+- In the handler, create a static `List<int>` called `strategicCustomers` and fill it by calling `Customers.GetStrategicCustomers()` from the added project.
+  - This way the list is only retrieved once. In memory it's lightning fast, but if we retrieve this list from a datastore, we do not want to load the list every single time.
 - Open the `OrderPlacedHandler` in `Billing.Regular`.
-- Check with `strategicCustomers.Contains(message.CustomerId)` if the incoming message contains a customerId that is of a strategic customer.
+- Using `strategicCustomers.Contains(message.CustomerId)`, check if the incoming message contains a customerId that is strategic.
 - If it is indeed a strategic customer, ignore this message inside this handler.
-  - Perhaps log to the console that we are ignoring this customer.
+  - Perhaps log that we are ignoring this customer.
 
 The result should be that the handler logs when it is ignoring a message, or log with the line of code that was already there that the message was received with a specific `OrderId`.
 
 ### Step 5
 
-- Do the same for `Billing.StrategicCustomer`, but now ignore the message if it is **NOT** a strategic customer.
+- Do the same for `Billing.StrategicCustomer`, but now ignore all messsages that were placed by regular customers.
 
 ### Step 6
 
-- In the `ClientUI` project, open the class `Program` and find what happens if you press the `P` key.
-- It should contain the creation of a random CustomerId between 0 and 10 and use that to send the `PlaceOrder` message to `Sales` and set everything in motion.
+- In the `ClientUI` project, open the class `Program` and find out what happens if you press the `P` key.
+- This should result in the creation of a random CustomerId between 0 and 10, which is then used to send the `PlaceOrder` message to `Sales` and set everything in motion.
 
 ### Step 7
 
-Whenever a CustomerId is either 3, 4 or 5 -according to Billing.Shared- the customer should be ignored by the `Billing.Regular` endpoint and processed by `Billing.Strategic`. Or vice versa.
+Whenever a CustomerId is either 3, 4 or 5 -according to Billing.Shared-, the customer should be ignored by the `Billing.Regular` endpoint and processed by `Billing.Strategic`, or vice versa.
 
-Verify this behavior by paying attention the the output in the console window for both endpoints.
+Verify this behavior by paying attention to the output in the console window for both endpoints.
 
 ## Conclusion
 
 We've seen an alternative way of dealing with priority queues, where the sending endpoint is completely unaware of *regular* or *strategic* customers.
 
-We used 3 customer identifiers (`CustomerId`) from `Billing.Shared` to decide whether a message contained a *regular* or *strategic* customer. If this list is either too large or takes too long to load, we might end up retrieving from the datastore, whether or not a customer is strategic or not. This puts quite a load on the database though, as both endpoints will independently retrieve this information. They are unaware of each other.
+We used 3 customer identifiers (`CustomerId`) from `Billing.Shared` to decide whether a message contained a *regular* or *strategic* customer. If this list is either too large or takes too long to load, we might need to load the customer's information to figure out their status. This puts quite a load on the database, as both endpoints will independently retrieve this information. They are unaware of each other.
 
 Besides the point that there are ways to solve this, the *main idea* here is that you have options.
 
@@ -88,4 +88,3 @@ Besides the point that there are ways to solve this, the *main idea* here is tha
   - We could decide to use more/other/different ways to split up the processing of these messages.
 
 We hope you learned that with messaging, handlers and endpoints you obtain new ways of dealing with data flowing through your system on multiple levels.
-
