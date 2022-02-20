@@ -31,6 +31,14 @@ The following frameworks need to be installed:
 - .NET Framework 4.6.1
 - .NET Core 6
 
+#### Particular Software Platform
+
+The Particular Service Platform includes ServiceControl, ServicePulse and ServiceInsight.
+The samples include a platform connection package that will fire up both ServiceControl and ServicePulse, without requiring any installation.
+
+In order to take a look at ServiceInsight, an installation is required. The latest version can be downloaded [on our website](https://github.com/Particular/ServiceInsight/releases/tag/2.9.2). Once installed, ServiceInsight needs to be connected to ServiceControl. 
+To do so, click the "Connect" button at the top left of the screen, and enter the ServiceControl URL. You can find the correct URL in ServicePulse, which shows a status bar with the ServiceControl information. Hovering over that, will expose the ServiceControl API URL. 
+
 ### Get a copy of this repository
 
 Clone or download this repo. If you're downloading a zip copy of the repo, ensure the zip file is unblocked before decompressing it:
