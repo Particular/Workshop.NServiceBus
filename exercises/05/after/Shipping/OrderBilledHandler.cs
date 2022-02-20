@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Messages;
 using NServiceBus;
 using NServiceBus.Logging;
 
 namespace Shipping
 {
-    public class OrderBilledHandler :
-        IHandleMessages<OrderBilled>
+    using Messages.Events;
+
+    public class OrderBilledHandler : IHandleMessages<OrderBilled>
     {
         static ILog log = LogManager.GetLogger<OrderBilledHandler>();
 

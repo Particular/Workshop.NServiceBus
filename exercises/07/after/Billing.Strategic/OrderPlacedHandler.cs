@@ -19,7 +19,7 @@ namespace Billing
         {
             if (!strategicCustomers.Contains(message.CustomerId))
             {
-                Console.WriteLine($"Ignoring order [{message.OrderId}], as [{message.CustomerId}] is NOT a strategic customer.");
+                log.Info($"Ignoring order [{message.OrderId}], as [{message.CustomerId}] is NOT a strategic customer.");
                 return Task.CompletedTask;
             }
 
