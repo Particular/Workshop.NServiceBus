@@ -81,7 +81,7 @@ There is a critical external API. The system doesn't process many messages for i
 
 Documentation:
 
-- https://docs.particular.net/monitoring/custom-checks/
+https://docs.particular.net/monitoring/custom-checks/
 
 ### Step 1
 
@@ -162,7 +162,7 @@ Run the endpoints and open *ServicePulse*. Verify how the custom check is report
 
 Documentation:
 
-- https://docs.particular.net/monitoring/heartbeats/
+https://docs.particular.net/monitoring/heartbeats/
 
 ### Step 1
 
