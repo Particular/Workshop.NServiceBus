@@ -26,10 +26,10 @@ Install [Visual Studio 2019](https://www.visualstudio.com) or later (Community, 
 - .NET desktop development
 - ASP.NET and web development
 
-The following frameworks needs to be installed:
+The following frameworks need to be installed:
 
 - .NET Framework 4.6.1
-- .NET Core 3.1
+- .NET Core 6
 
 ### Get a copy of this repository
 
