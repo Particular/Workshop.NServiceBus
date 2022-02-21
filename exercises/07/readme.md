@@ -1,10 +1,10 @@
 # Exercise 07 : Priority Queues
 
-In this exercise we'll investigate a different way of mimicking priority queues through publish/subscribe. This way the publisher is not aware of a message, customer or anything being either a regular or a priority message. Two (or more) receiving endpoints will decide if the incoming message is a regular or priority message.
+In this exercise we'll investigate a different way of mimicking priority queues through publish/subscribe. This way the publisher is not aware any specifics that would impact which endpoints are interested in this message. Two (or more) receiving endpoints will subscribe to the message and decide if the incoming message is relevant to them.
 
 For endpoints that have to deal with very high throughput, this may not be the best solution, since both endpoints will receive each message separately. The main benefit we gain here, is the loose coupling. The business requirements of Billing are not leaked into the Sales endpoint. An additional benefit is that, since they each have their own queue, they can be scaled out independently, etc.
 
-In the end it's always a trade-off. Each scenario is unique though and needs to be considered separately.
+In the end it's always a trade-off. Each scenario is unique and needs to be considered separately.
 
 ## Overview
 
@@ -19,15 +19,16 @@ You'll learn:
 
 ### Step 1
 
-- In the solution check the `Sales` endpoint, specifically the class `PlaceOrderHandler`.
+- In the solution, take a look at the `Sales` endpoint, specifically the class `PlaceOrderHandler`.
   - It receives a `PlaceOrder` command.
   - It immediately publishes an `OrderPlaced` event.
-    For the Billign endpoint, it matters whether the order that was placed was for a *regular* or a *strategic* customer. As you can tell, the `Sales` endpoint has no knowledge of this.
+
+For the Billing endpoint, it matters whether the order was for a *regular* or a *strategic* customer. As you can tell, the `Sales` endpoint has no knowledge of this.
 
 ### Step 2
 
 - Check the `Billing` endpoint, specifically the `OrderPlacedHandler`.
-  - It subscribed to the previously published `OrderPlaced` event.
+  - It is subscribed to the `OrderPlaced` event.
   - At this moment it does not differentiate between *regular* or *strategic* customers.
 
 ### Step 3
@@ -36,7 +37,7 @@ You'll learn:
   - Conveniently, on the file system the folder is already named `Billing.Regular`.
   - The new folder should be named `Billing.Strategic`.
 - In Visual Studio first rename the current `Billing` project to `Billing.Regular`.
-  - Otherwise loading the other project will fail due to name duplication.
+  - Otherwise loading the copied project will fail as all projects within a solution should have unique names.
 - In Visual Studio now add the newly copied project to your solution.
   - It will be called `Billing`.
 - Rename the newly added project to `Billing.Strategic`.
@@ -48,14 +49,14 @@ Now both projects will automatically subscribe to the `OrderPlaced` event and pr
 We need to make sure both differentiate between *regular* and *strategic* customers.
 
 - There is another project in the solution called `Billing.Shared`. Reference it from both `Billing.Regular` and `Billing.Strategic`.
-- In the handler, create a static `List<int>` called `strategicCustomers` and fill it by calling `Customers.GetStrategicCustomers()` from the added project.
+- In the handler, create a static `List<int>` called `strategicCustomers` and populate it by calling `Customers.GetStrategicCustomers()` from the shared project.
   - This way the list is only retrieved once. In memory it's lightning fast, but if we retrieve this list from a datastore, we do not want to load the list every single time.
 - Open the `OrderPlacedHandler` in `Billing.Regular`.
 - Using `strategicCustomers.Contains(message.CustomerId)`, check if the incoming message contains a customerId that is strategic.
-- If it is indeed a strategic customer, ignore this message inside this handler.
+- If the order belongs to a strategic customer, ignore this message inside this handler.
   - Perhaps log that we are ignoring this customer.
 
-The result should be that the handler logs when it is ignoring a message, or log with the line of code that was already there that the message was received with a specific `OrderId`.
+The resulting code logs when it's ignoring a message, or logs that the message was received with a specific `OrderId`.
 
 ### Step 5
 
