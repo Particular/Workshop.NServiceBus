@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Messages.Events;
 using NServiceBus;
 
 namespace Sales

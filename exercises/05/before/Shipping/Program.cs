@@ -1,5 +1,4 @@
-﻿using Messages;
-using NServiceBus;
+﻿using NServiceBus;
 using System;
 using System.Threading.Tasks;
 
