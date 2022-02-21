@@ -21,12 +21,10 @@ namespace ClientUI
             var persistence = endpointConfiguration.UsePersistence<LearningPersistence>();
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
-            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
             conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
-
 
             var routing = transport.Routing();
             routing.RouteToEndpoint(typeof(RegisterNewUser).Assembly, "UserRegistration");

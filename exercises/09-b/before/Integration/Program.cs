@@ -41,7 +41,6 @@ internal class Program
             var persistence = endpointConfiguration.UsePersistence<LearningPersistence>();
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
-            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             endpointConfiguration.LimitMessageProcessingConcurrencyTo(10);
 

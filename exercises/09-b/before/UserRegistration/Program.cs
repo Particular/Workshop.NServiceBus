@@ -45,7 +45,6 @@ internal class Program
             var persistence = endpointConfiguration.UsePersistence<LearningPersistence>();
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
-            endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
