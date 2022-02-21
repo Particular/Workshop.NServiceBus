@@ -1,21 +1,20 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace ClientUI.Handler
+﻿namespace ClientUI.Handler
 {
     using Integration.Messages.Events;
     using NServiceBus;
     using NServiceBus.Logging;
+    using System;
+    using System.Threading.Tasks;
     using UserRegistration.Messages.Commands;
 
     public class VerificationEmailSentHandler : IHandleMessages<VerificationEmailSent>
     {
         private const int SecondsToCompletelyTimeoutSaga = 12;
-        static ILog logger = LogManager.GetLogger<VerificationEmailSentHandler>();
-        static Random rnd = new Random();
+        private static readonly ILog logger = LogManager.GetLogger<VerificationEmailSentHandler>();
+        private static readonly Random rnd = new Random();
 
         /// <summary>
-        /// This handler mimics the fact that a user actually clicked the email verification link! :-)
+        ///     This handler mimics the fact that a user actually clicked the email verification link! :-)
         /// </summary>
         public Task Handle(VerificationEmailSent message, IMessageHandlerContext context)
         {

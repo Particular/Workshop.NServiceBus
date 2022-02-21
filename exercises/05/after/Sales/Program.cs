@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using Messages.Events;
-using NServiceBus;
-
-namespace Sales
+﻿namespace Sales
 {
-    class Program
+    using Messages.Events;
+    using NServiceBus;
+    using System;
+    using System.Threading.Tasks;
+
+    internal class Program
     {
-        static async Task Main()
+        private static async Task Main()
         {
             Console.Title = "Sales";
 
@@ -24,17 +24,15 @@ namespace Sales
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningEventsAs(
                 type =>
-                type == typeof(OrderPlaced)
-                );
+                    type == typeof(OrderPlaced)
+            );
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
             Console.WriteLine("Press Enter to exit.");
             Console.ReadLine();
 
-            await endpointInstance.Stop()
-                .ConfigureAwait(false);
+            await endpointInstance.Stop().ConfigureAwait(false);
         }
     }
 }

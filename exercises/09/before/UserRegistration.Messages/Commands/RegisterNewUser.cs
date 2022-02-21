@@ -1,6 +1,6 @@
 ﻿namespace UserRegistration.Messages.Commands
 {
-    using UserRegistration.Messages.Entities;
+    using Entities;
 
     public class RegisterNewUser : UserEntity
     {

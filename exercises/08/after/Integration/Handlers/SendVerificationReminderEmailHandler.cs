@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-
-namespace Integration.Handlers
+﻿namespace Integration.Handlers
 {
-    using Integration.Messages.Commands;
+    using Messages.Commands;
     using NServiceBus;
     using NServiceBus.Logging;
+    using System.Threading.Tasks;
 
     public class SendVerificationReminderEmailHandler : IHandleMessages<SendVerificationReminderEmail>
     {
-        static ILog logger = LogManager.GetLogger<SendVerificationReminderEmailHandler>();
+        private static readonly ILog logger = LogManager.GetLogger<SendVerificationReminderEmailHandler>();
 
         public Task Handle(SendVerificationReminderEmail message, IMessageHandlerContext context)
         {

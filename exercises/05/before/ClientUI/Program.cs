@@ -1,14 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Messages;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace ClientUI
+﻿namespace ClientUI
 {
-    class Program
+    using Messages;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using System;
+    using System.Threading.Tasks;
+
+    internal class Program
     {
-        static async Task Main()
+        private static readonly ILog log = LogManager.GetLogger<Program>();
+
+        private static async Task Main()
         {
             Console.Title = "ClientUI";
 
@@ -22,19 +24,14 @@ namespace ClientUI
             var routing = transport.Routing();
             routing.RouteToEndpoint(typeof(PlaceOrder), "Sales");
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
-            await RunLoop(endpointInstance)
-                .ConfigureAwait(false);
+            await RunLoop(endpointInstance).ConfigureAwait(false);
 
-            await endpointInstance.Stop()
-                .ConfigureAwait(false);
+            await endpointInstance.Stop().ConfigureAwait(false);
         }
 
-        static ILog log = LogManager.GetLogger<Program>();
-
-        static async Task RunLoop(IEndpointInstance endpointInstance)
+        private static async Task RunLoop(IEndpointInstance endpointInstance)
         {
             while (true)
             {
@@ -54,7 +51,7 @@ namespace ClientUI
                         // Send the command
                         log.Info($"Sending PlaceOrder command, OrderId = {command.OrderId}");
                         await endpointInstance.Send(command)
-                            .ConfigureAwait(false);
+                                              .ConfigureAwait(false);
 
                         break;
 

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Billing.Shared
+﻿namespace Billing.Shared
 {
+    using System.Collections.Generic;
+
     public static class Customers
     {
         public static List<int> GetStrategicCustomers()

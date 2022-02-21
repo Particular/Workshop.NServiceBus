@@ -1,19 +1,16 @@
-﻿using System.Threading.Tasks;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace Billing
+﻿namespace Billing
 {
-    using System;
-    using System.Collections.Generic;
-    using Billing.Shared;
     using Messages.Events;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using Shared;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
-    public class OrderPlacedHandler :
-        IHandleMessages<OrderPlaced>
+    public class OrderPlacedHandler : IHandleMessages<OrderPlaced>
     {
-        static ILog log = LogManager.GetLogger<OrderPlacedHandler>();
-        static List<int> strategicCustomers = Customers.GetStrategicCustomers();
+        private static readonly ILog log = LogManager.GetLogger<OrderPlacedHandler>();
+        private static readonly List<int> strategicCustomers = Customers.GetStrategicCustomers();
 
         public Task Handle(OrderPlaced message, IMessageHandlerContext context)
         {

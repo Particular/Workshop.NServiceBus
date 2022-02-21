@@ -7,19 +7,21 @@ Our endpoints are now production ready, but we're still missing monitoring.
 In this exercise you'll learn how to:
 
 - Setup a *ServiceControl* instance
-- Setup a *ServiceControl Monitoring* instance 
+- Setup a *ServiceControl Monitoring* instance
 - Configure an endpoint to use Platform Monitoring
 - Setup a custom check
 - Setup heartbeats
 - Use ServiceInsight
 
-## Exercise 9.1 
+## Exercise 9.1
 
 We need to install some components and configure these to use a transport.
 
 ### Step 1
 
-Setup *ServiceControl* , *ServiceControl Monitoring* , and *ServicePulse* as instructed in the [Monitoring Setup Tutorial](https://docs.particular.net/tutorials/monitoring-setup/) and **select MSMQ as the transport**.
+Setup *ServiceInsight* as instructed on the [Readme of the repo](https://github.com/Particular/Workshop.NServiceBus).
+
+To set up the Platform tools from scratch without the Platform connection package, follow the documentation:
 
 - https://docs.particular.net/tutorials/monitoring-setup/
 
@@ -58,7 +60,7 @@ Increase the maximum concurrency of the processing endpoint to 10.
 Verify that *Critical time* of the endpoint is actually decreasing.
 
 
-## Exercise 9.2 
+## Exercise 9.2
 
 NOTE: This exercise assumes that ServiceInsight is installed. See the [prerequisites](../../README.md#preparing-your-machine-for-the-workshop) for details.
 

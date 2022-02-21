@@ -1,12 +1,12 @@
-﻿using System;
-
-namespace Platform
+﻿namespace Platform
 {
-    class Program
+    using System;
+
+    internal class Program
     {
         #region PlatformMain
 
-        static void Main()
+        private static void Main()
         {
             Console.Title = "Particular Service Platform Launcher";
             // Particular.PlatformLauncher.Launch();

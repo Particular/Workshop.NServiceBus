@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Integration.Messages.Commands
+﻿namespace Integration.Messages.Commands
 {
+    using System;
+
     public class AddUserToSystem
     {
         public Guid UserId { get; set; }

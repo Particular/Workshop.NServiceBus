@@ -1,17 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using NServiceBus;
-
-namespace ClientUI
+﻿namespace ClientUI
 {
     using Messages;
+    using NServiceBus;
     using NServiceBus.Logging;
+    using System;
+    using System.Threading.Tasks;
 
-    class Program
+    internal class Program
     {
-        static ILog log = LogManager.GetLogger<Program>();
+        private static readonly ILog log = LogManager.GetLogger<Program>();
 
-        static async Task Main()
+        private static async Task Main()
         {
             Console.Title = "ClientUI";
 
@@ -19,15 +18,14 @@ namespace ClientUI
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
             await RunLoop(endpointInstance).ConfigureAwait(false);
 
             await endpointInstance.Stop().ConfigureAwait(false);
         }
 
-        static async Task RunLoop(IEndpointInstance endpointInstance)
+        private static async Task RunLoop(IEndpointInstance endpointInstance)
         {
             while (true)
             {

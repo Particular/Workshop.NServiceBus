@@ -1,6 +1,4 @@
-﻿using NServiceBus;
-
-namespace Messages.Events
+﻿namespace Messages.Events
 {
     public class OrderBilled
     {

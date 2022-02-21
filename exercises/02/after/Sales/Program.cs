@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using NServiceBus;
-
-namespace Sales
+﻿namespace Sales
 {
-    class Program
+    using NServiceBus;
+    using System;
+    using System.Threading.Tasks;
+
+    internal class Program
     {
-        static async Task Main()
+        private static async Task Main()
         {
             Console.Title = "Sales";
 

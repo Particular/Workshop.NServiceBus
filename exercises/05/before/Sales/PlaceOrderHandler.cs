@@ -1,16 +1,16 @@
-using System.Threading.Tasks;
-using Messages;
-using Messages.Events;
-using NServiceBus;
-using NServiceBus.Logging;
-
 #pragma warning disable 162
 
 namespace Sales
 {
+    using Messages;
+    using Messages.Events;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using System.Threading.Tasks;
+
     public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
     {
-        static ILog log = LogManager.GetLogger<PlaceOrderHandler>();
+        private static readonly ILog log = LogManager.GetLogger<PlaceOrderHandler>();
 
         public Task Handle(PlaceOrder message, IMessageHandlerContext context)
         {

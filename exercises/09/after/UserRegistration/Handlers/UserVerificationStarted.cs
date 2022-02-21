@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-
-namespace UserRegistration.Handlers
+﻿namespace UserRegistration.Handlers
 {
+    using Messages.Events;
     using NServiceBus;
     using NServiceBus.Logging;
-    using UserRegistration.Messages.Events;
+    using System.Threading.Tasks;
 
     public class UserVerificationStartedHandler : IHandleMessages<UserVerificationStarted>
     {
-        static ILog logger = LogManager.GetLogger<UserVerificationStartedHandler>();
+        private static readonly ILog logger = LogManager.GetLogger<UserVerificationStartedHandler>();
 
         public Task Handle(UserVerificationStarted message, IMessageHandlerContext context)
         {

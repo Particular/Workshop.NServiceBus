@@ -1,4 +1,4 @@
-﻿namespace Shipping
+namespace Shipping
 {
     using Messages;
     using NServiceBus;

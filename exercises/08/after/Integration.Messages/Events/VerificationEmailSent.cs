@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Integration.Messages.Events
+﻿namespace Integration.Messages.Events
 {
+    using System;
+
     public class VerificationEmailSent
     {
         public Guid UserId { get; set; }

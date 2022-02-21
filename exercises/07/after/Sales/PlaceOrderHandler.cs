@@ -1,18 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace Sales
+﻿namespace Sales
 {
     using Messages.Commands;
     using Messages.Events;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using System;
+    using System.Threading.Tasks;
 
-    public class PlaceOrderHandler :
-        IHandleMessages<PlaceOrder>
+    public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
     {
-        static ILog log = LogManager.GetLogger<PlaceOrderHandler>();
-        static Random random = new Random();
+        private static readonly ILog log = LogManager.GetLogger<PlaceOrderHandler>();
+        private static Random random = new Random();
 
         public Task Handle(PlaceOrder message, IMessageHandlerContext context)
         {

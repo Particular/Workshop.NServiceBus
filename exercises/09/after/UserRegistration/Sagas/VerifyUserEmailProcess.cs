@@ -1,15 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace UserRegistration.Sagas
+﻿namespace UserRegistration.Sagas
 {
     using AutoMapper;
     using Integration.Messages.Commands;
+    using Messages.Commands;
+    using Messages.Events;
     using NServiceBus;
     using NServiceBus.Logging;
-    using UserRegistration.Messages.Commands;
-    using UserRegistration.Messages.Events;
-    using UserRegistration.Timeouts;
+    using System;
+    using System.Threading.Tasks;
+    using Timeouts;
 
     public class VerifyUserEmailProcess : Saga<VerifyUserEmailProcess.VerifyUserEmailData>,
         IAmStartedByMessages<RegisterNewUser>,
@@ -17,21 +16,7 @@ namespace UserRegistration.Sagas
         IHandleTimeouts<EmailReminderTimeout>,
         IHandleTimeouts<UserEmailVerificationExpiredTimeout>
     {
-        static ILog logger = LogManager.GetLogger<VerifyUserEmailProcess>();
-
-        public class VerifyUserEmailData : ContainSagaData
-        {
-            public Guid UserIdentifier { get; set; }
-            public string VerificationCode { get; set; }
-            public string Name { get; set; }
-            public string EmailAddress { get; set; }
-        }
-
-        protected override void ConfigureHowToFindSaga(SagaPropertyMapper<VerifyUserEmailData> mapper)
-        {
-            mapper.ConfigureMapping<RegisterNewUser>(message => message.UserId).ToSaga(saga => saga.UserIdentifier);
-            mapper.ConfigureMapping<UserVerifyingEmail>(message => message.UserId).ToSaga(saga => saga.UserIdentifier);
-        }
+        private static readonly ILog logger = LogManager.GetLogger<VerifyUserEmailProcess>();
 
         public async Task Handle(RegisterNewUser message, IMessageHandlerContext context)
         {
@@ -46,7 +31,8 @@ namespace UserRegistration.Sagas
             await context.Publish(@event).ConfigureAwait(false);
 
             // Send command to send an email
-            var command = new SendVerificationEmail(message.UserId, message.Name, message.EmailAddress, Data.VerificationCode);
+            var command = new SendVerificationEmail(message.UserId, message.Name, message.EmailAddress,
+                Data.VerificationCode);
             await context.Send(command).ConfigureAwait(false);
 
             // Create timeout to make user aware to _really_ click that link.
@@ -77,7 +63,8 @@ namespace UserRegistration.Sagas
             var command = new SendVerificationReminderEmail(Data.UserIdentifier, Data.VerificationCode);
             await context.Send(command).ConfigureAwait(false);
 
-            await RequestTimeout<UserEmailVerificationExpiredTimeout>(context, TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            await RequestTimeout<UserEmailVerificationExpiredTimeout>(context, TimeSpan.FromSeconds(5))
+                .ConfigureAwait(false);
         }
 
         public Task Timeout(UserEmailVerificationExpiredTimeout state, IMessageHandlerContext context)
@@ -85,6 +72,20 @@ namespace UserRegistration.Sagas
             MarkAsComplete();
 
             return Task.CompletedTask;
+        }
+
+        protected override void ConfigureHowToFindSaga(SagaPropertyMapper<VerifyUserEmailData> mapper)
+        {
+            mapper.ConfigureMapping<RegisterNewUser>(message => message.UserId).ToSaga(saga => saga.UserIdentifier);
+            mapper.ConfigureMapping<UserVerifyingEmail>(message => message.UserId).ToSaga(saga => saga.UserIdentifier);
+        }
+
+        public class VerifyUserEmailData : ContainSagaData
+        {
+            public Guid UserIdentifier { get; set; }
+            public string VerificationCode { get; set; }
+            public string Name { get; set; }
+            public string EmailAddress { get; set; }
         }
     }
 }

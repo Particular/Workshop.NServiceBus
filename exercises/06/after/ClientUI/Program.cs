@@ -1,19 +1,20 @@
-﻿using System;
-using System.Threading.Tasks;
-using Messages;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace ClientUI
+﻿namespace ClientUI
 {
-    class Program
-    {
-        static ILog log;
+    using Messages;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using System;
+    using System.Globalization;
+    using System.Threading.Tasks;
 
-        static async Task Main()
+    internal class Program
+    {
+        private static ILog log;
+
+        private static async Task Main()
         {
             LogManager.Use<NLogFactory>();
-            NLog.LogManager.Configuration.DefaultCultureInfo = System.Globalization.CultureInfo.InvariantCulture;
+            NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
             log = LogManager.GetLogger<Program>();
 
             Console.Title = "ClientUI";
@@ -32,16 +33,16 @@ namespace ClientUI
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+                                                 .ConfigureAwait(false);
 
             await RunLoop(endpointInstance)
                 .ConfigureAwait(false);
 
             await endpointInstance.Stop()
-                .ConfigureAwait(false);
+                                  .ConfigureAwait(false);
         }
 
-        static async Task RunLoop(IEndpointInstance endpointInstance)
+        private static async Task RunLoop(IEndpointInstance endpointInstance)
         {
             while (true)
             {
@@ -61,7 +62,7 @@ namespace ClientUI
                         // Send the command
                         log.Info($"Sending PlaceOrder command, OrderId = {command.OrderId}");
                         await endpointInstance.Send(command)
-                            .ConfigureAwait(false);
+                                              .ConfigureAwait(false);
 
                         break;
 

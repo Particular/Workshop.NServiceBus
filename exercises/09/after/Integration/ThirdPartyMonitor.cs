@@ -1,20 +1,20 @@
-﻿using System;
+﻿using NServiceBus.CustomChecks;
+using NServiceBus.Logging;
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NServiceBus.CustomChecks;
-using NServiceBus.Logging;
 
-class ThirdPartyMonitor : CustomCheck
+internal class ThirdPartyMonitor : CustomCheck
 {
-    const string url = "https://google.com";
-    static ILog log = LogManager.GetLogger<ThirdPartyMonitor>();
+    private const string url = "https://google.com";
+    private static readonly ILog log = LogManager.GetLogger<ThirdPartyMonitor>();
 
     public ThirdPartyMonitor()
         : base(
-            id: $"Monitor {url}",
-            category: "Monitor 3rd Party ",
-            repeatAfter: TimeSpan.FromSeconds(10))
+            $"Monitor {url}",
+            "Monitor 3rd Party ",
+            TimeSpan.FromSeconds(10))
     {
     }
 
@@ -23,16 +23,17 @@ class ThirdPartyMonitor : CustomCheck
         var start = Stopwatch.StartNew();
         try
         {
-            if (DateTime.UtcNow.Minute % 2 == 0) throw new InvalidOperationException("Current minute is even so I'm failing.");
+            if (DateTime.UtcNow.Minute % 2 == 0)
+                throw new InvalidOperationException("Current minute is even so I'm failing.");
             using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(30) })
-            using (var response = await client.GetAsync(url)
-                .ConfigureAwait(false))
+            using (var response = await client.GetAsync(url).ConfigureAwait(false))
             {
                 if (response.IsSuccessStatusCode)
                 {
                     log.Info($"Succeeded in contacting {url}");
                     return CheckResult.Pass;
                 }
+
                 var error = $"Failed to contact '{url}'. HttpStatusCode: {response.StatusCode}";
                 log.Info(error);
                 return CheckResult.Failed(error);

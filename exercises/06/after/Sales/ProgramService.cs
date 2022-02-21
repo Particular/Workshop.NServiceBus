@@ -1,39 +1,46 @@
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.ServiceProcess;
-using System.Threading.Tasks;
 using Messages.Events;
 using NServiceBus;
 using NServiceBus.Logging;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Security.Cryptography;
+using System.ServiceProcess;
+using System.Text;
+using System.Threading.Tasks;
 
 [DesignerCategory("Code")]
-class ProgramService : ServiceBase
+internal class ProgramService : ServiceBase
 {
-    IEndpointInstance endpoint;
-
-    static ILog logger;
+    private static readonly ILog logger;
+    private IEndpointInstance endpoint;
 
     static ProgramService()
     {
         LogManager.Use<NLogFactory>();
-        NLog.LogManager.Configuration.DefaultCultureInfo = System.Globalization.CultureInfo.InvariantCulture;
+        NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
         logger = LogManager.GetLogger<ProgramService>();
 
-        AppDomain.CurrentDomain.UnhandledException += (sender, ea) => LogManager.GetLogger("UnhandledException").Fatal(ea.ExceptionObject.GetType().Name, (Exception)ea.ExceptionObject);
-        AppDomain.CurrentDomain.FirstChanceException += (sender, ea) => LogManager.GetLogger("FirstChanceException." + ea.Exception.GetType().Name).Debug(ea.Exception.Message, ea.Exception);
+        AppDomain.CurrentDomain.UnhandledException += (sender, ea) =>
+            LogManager.GetLogger("UnhandledException")
+                      .Fatal(ea.ExceptionObject.GetType().Name, (Exception)ea.ExceptionObject);
+        AppDomain.CurrentDomain.FirstChanceException += (sender, ea) =>
+            LogManager.GetLogger("FirstChanceException." + ea.Exception.GetType().Name)
+                      .Debug(ea.Exception.Message, ea.Exception);
     }
 
-    static async Task Main(string[] args)
+    private static async Task Main(string[] args)
     {
         if (args.Length == 1 && args[0] == "install")
         {
             await Console.Out.WriteLineAsync("Running installers...")
-                .ConfigureAwait(false);
+                         .ConfigureAwait(false);
             var endpointConfiguration = CreateConfiguration();
             endpointConfiguration.EnableInstallers();
             await Endpoint.Create(endpointConfiguration)
-                .ConfigureAwait(false);
+                          .ConfigureAwait(false);
             return;
         }
 
@@ -45,6 +52,7 @@ class ProgramService : ServiceBase
                 Run(service);
                 return;
             }
+
             Console.Title = "Sales";
             Console.CancelKeyPress += (sender, e) => { service.OnStop(); };
             service.OnStart(null);
@@ -59,17 +67,14 @@ class ProgramService : ServiceBase
         AsyncOnStart().GetAwaiter().GetResult();
     }
 
-    async Task AsyncOnStart()
+    private async Task AsyncOnStart()
     {
         try
         {
             var endpointConfiguration = CreateConfiguration();
-            if (Environment.UserInteractive && Debugger.IsAttached)
-            {
-                endpointConfiguration.EnableInstallers();
-            }
+            if (Environment.UserInteractive && Debugger.IsAttached) endpointConfiguration.EnableInstallers();
             endpoint = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+                                     .ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -77,7 +82,7 @@ class ProgramService : ServiceBase
         }
     }
 
-    static void Exit(string failedToStart, Exception exception)
+    private static void Exit(string failedToStart, Exception exception)
     {
         logger.Fatal(failedToStart, exception);
         //TODO: When using an external logging framework it is important to flush any pending entries prior to calling FailFast
@@ -88,7 +93,7 @@ class ProgramService : ServiceBase
         Environment.FailFast(failedToStart, exception);
     }
 
-    static Task OnCriticalError(ICriticalErrorContext context)
+    private static Task OnCriticalError(ICriticalErrorContext context)
     {
         // https://docs.particular.net/nservicebus/hosting/critical-errors
         var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
@@ -101,7 +106,7 @@ class ProgramService : ServiceBase
         endpoint?.Stop().GetAwaiter().GetResult();
     }
 
-    static EndpointConfiguration CreateConfiguration()
+    private static EndpointConfiguration CreateConfiguration()
     {
         var endpointConfiguration = new EndpointConfiguration("Sales");
         endpointConfiguration.AuditProcessedMessagesTo("audit");
@@ -117,12 +122,12 @@ class ProgramService : ServiceBase
         var conventions = endpointConfiguration.Conventions();
         conventions.DefiningEventsAs(
             type =>
-            type == typeof(OrderPlaced)
-            );
+                type == typeof(OrderPlaced)
+        );
 
         endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-        var displayName = System.Net.Dns.GetHostName();
+        var displayName = Dns.GetHostName();
         var identifier = StringToGuid("Sales@" + displayName);
 
         var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
@@ -132,11 +137,11 @@ class ProgramService : ServiceBase
         return endpointConfiguration;
     }
 
-    static Guid StringToGuid(string value)
+    private static Guid StringToGuid(string value)
     {
-        using (var md5 = System.Security.Cryptography.MD5.Create())
+        using (var md5 = MD5.Create())
         {
-            byte[] hash = md5.ComputeHash(System.Text.Encoding.Default.GetBytes(value));
+            var hash = md5.ComputeHash(Encoding.Default.GetBytes(value));
             return new Guid(hash);
         }
     }

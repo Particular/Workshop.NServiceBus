@@ -7,7 +7,7 @@ namespace ClientUI
 
     public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
     {
-        static ILog log = LogManager.GetLogger<PlaceOrderHandler>();
+        private static readonly ILog log = LogManager.GetLogger<PlaceOrderHandler>();
 
         public Task Handle(PlaceOrder message, IMessageHandlerContext context)
         {
