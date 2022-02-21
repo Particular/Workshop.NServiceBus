@@ -97,7 +97,7 @@ namespace ClientUI
 
             Parallel.For(0, 10, i =>
             {
-                RegisterNewUser(users[random.Next(9)]);
+                RegisterNewUser(users[random.Next(9)]).GetAwaiter().GetResult();
             });
         }
 
