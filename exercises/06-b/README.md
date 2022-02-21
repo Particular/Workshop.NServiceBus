@@ -10,7 +10,6 @@ In this exercise you'll learn:
 
 - How to host an NServiceBus endpoint in production as a windows service
 - Configure a non default logging framework and configure it to log outside of the deployment path
-- Understand the usage differences of endpoint create and endpoint start
 - Make the process compatible with automated deployments
 
 Advanced optional exercises:
@@ -61,8 +60,8 @@ internal class Program
 
         builder.ConfigureLogging((ctx, logging) =>
         {
-			// TODO: optionally choose a custom logging library
-			// https://docs.particular.net/nservicebus/logging/#custom-logging
+            // TODO: optionally choose a custom logging library
+            // https://docs.particular.net/nservicebus/logging/#custom-logging
 
             logging.AddConfiguration(ctx.Configuration.GetSection("Logging"));
 
@@ -76,7 +75,7 @@ internal class Program
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
-			// TODO: optionally choose a different serializer
+            // TODO: optionally choose a different serializer
             // https://docs.particular.net/nservicebus/serialization/
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
@@ -129,30 +128,16 @@ Add an assembly reference to `NServiceBus.Extensions.Hosting` and `Microsoft.Ext
 
 ### Step 4
 
-Replace the `new EndpointConfiguration` in the template with a call to `CreateConfiguration()` like the following:
-
-```
-var endpointConfiguration = CreateConfiguration();
-if (Environment.UserInteractive && Debugger.IsAttached)
-{
-    endpointConfiguration.EnableInstallers();
-}
-endpoint = await Endpoint.Start(endpointConfiguration)
-    .ConfigureAwait(false);
-```
-
-### Step 5
-
 Assign the right value to `Console.Title`.
 
-### Step 6
+### Step 5
 
 Add a critical error callback to method `OnCriticalError` to the `CreateConfiguration` function as documented on the following location:
 
 - https://docs.particular.net/nservicebus/hosting/cloud-services-host/critical
 
 
-### Step 7
+### Step 6
 
 Repeat the previous steps for the *Sales* and *Shipping* projects.
 
@@ -244,7 +229,7 @@ Create an `nlog.config` and add the following NLog related snippets to the confi
 
 ### Step 5
 
-Run the Billing endpoint, you should now see Debug output to the console. Also check the folder on `C:/logs` and see if it contains a file called `nlog-shipping-date.log`.
+Run the Billing endpoint. You should now see Debug output in the console window. Also check the folder on `C:/logs` and see if it contains a file called `nlog-shipping-date.log`.
 
 ### Step 6
 
