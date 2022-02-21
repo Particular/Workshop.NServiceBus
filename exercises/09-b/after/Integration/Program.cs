@@ -1,13 +1,13 @@
-﻿namespace UserRegistration
-{
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
-    using NServiceBus;
-    using System;
-    using System.Diagnostics;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Threading.Tasks;
+﻿namespace UserRegistration;
+
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NServiceBus;
+using System;
+using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 internal class Program
 {
@@ -46,15 +46,17 @@ internal class Program
             var metrics = endpointConfiguration.EnableMetrics();
             metrics.SendMetricDataToServiceControl("particular.monitoring", TimeSpan.FromSeconds(0.5));
             endpointConfiguration.SendHeartbeatTo(
-                serviceControlQueue: "particular.servicecontrol",
-                frequency: TimeSpan.FromSeconds(60),
-                timeToLive: TimeSpan.FromSeconds(30));
+                "particular.servicecontrol",
+                TimeSpan.FromSeconds(60),
+                TimeSpan.FromSeconds(30));
 
             endpointConfiguration.LimitMessageProcessingConcurrencyTo(10);
 
             var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
-            conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
+            conventions.DefiningCommandsAs(n =>
+                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+            conventions.DefiningEventsAs(n =>
+                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
 
             endpointConfiguration.EnableInstallers();
 
@@ -62,7 +64,6 @@ internal class Program
         });
 
         return builder.ConfigureServices(services => { });
-
     }
 
     private static async Task OnCriticalError(ICriticalErrorContext context)
@@ -90,5 +91,4 @@ internal class Program
             return new Guid(hash);
         }
     }
-}
 }

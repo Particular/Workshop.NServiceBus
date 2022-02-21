@@ -4,6 +4,8 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using NServiceBus;
+using System.Security.Cryptography;
+using System.Text;
 
 internal class Program
 {
@@ -25,6 +27,7 @@ internal class Program
 
             logging.AddEventLog();
             logging.AddConsole();
+
         });
 
         builder.UseNServiceBus(ctx =>
@@ -33,6 +36,8 @@ internal class Program
 
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
+            // TODO: optionally choose a different serializer
+            // https://docs.particular.net/nservicebus/serialization/
             endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
@@ -45,12 +50,17 @@ internal class Program
 
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            // var displayName = System.Net.Dns.GetHostName();
-            // var identifier = StringToGuid("Billing@" + displayName);
-            //
-            // var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
-            // endpointIdentity.UsingCustomDisplayName(displayName);
-            // endpointIdentity.UsingCustomIdentifier(identifier);
+            if (Environment.UserInteractive && Debugger.IsAttached)
+            {
+                endpointConfiguration.EnableInstallers();
+            }
+
+            var displayName = System.Net.Dns.GetHostName();
+            var identifier = StringToGuid("Billing@" + displayName);
+
+            var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
+            endpointIdentity.UsingCustomDisplayName(displayName);
+            endpointIdentity.UsingCustomIdentifier(identifier);
 
             return endpointConfiguration;
         });
@@ -73,6 +83,15 @@ internal class Program
         finally
         {
             Environment.FailFast(fatalMessage, context.Exception);
+        }
+    }
+
+    private static Guid StringToGuid(string value)
+    {
+        using (var md5 = MD5.Create())
+        {
+            var hash = md5.ComputeHash(Encoding.Default.GetBytes(value));
+            return new Guid(hash);
         }
     }
 }
