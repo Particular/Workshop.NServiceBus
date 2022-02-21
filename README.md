@@ -21,7 +21,7 @@ To complete the exercises, you require a Windows machine and Visual Studio.
 
 #### Visual Studio
 
-Install [Visual Studio 2019](https://www.visualstudio.com) or later (Community, Professional, or Enterprise) with the following workloads:
+Install [Visual Studio 2022](https://www.visualstudio.com) or later (Community, Professional, or Enterprise) with the following workloads:
 
 - .NET desktop development
 - ASP.NET and web development
