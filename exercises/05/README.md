@@ -1,14 +1,14 @@
-# Exercise 5: Message serialization, wire compatibility and type resolution
+# Exercise 5: Message serialization, wire compatibility, and type resolution
 
 Important: Before attempting the exercise, please ensure you have followed the instructions for preparing your machine and that you have read the instructions for running the exercise solutions.
 
 ## Overview
 
-In this exersice you will learn how to configure a serializer, how to configure multiple serializer in order to receive multiple wire formats and how you can use messages types that do not use the NServiceBus marker interfaces so that you can use POCO's.
+In this exercise, you will learn how to configure a serializer, how to configure multiple serializers to receive multiple wire formats, and how you can use messages types that do not use the NServiceBus marker interfaces so that you can use POCO's.
 
-## Exersize 5.1:  Naming conventions
+## Exercise 5.1:  Naming conventions
 
-The Billing and Shipping endpoints needs to be subscribe to the `OrderPlaced` event published by Sales.
+The Billing and Shipping endpoints need to be subscribed to the `OrderPlaced` event published by Sales.
 
 Useful documentation:
 
@@ -28,20 +28,20 @@ Compare the configurations of Billing and Shipping. Notice that Billing has a na
 
 ### Step 5
 
-Fix the configuration of Shipping so that it will succesfully subscribe to the OrderPlaced event from Sales.
+Fix the configuration of Shipping so that it will successfully subscribe to the OrderPlaced event from Sales.
 
 ### Step 6
 
-Stop all processes and delete the `.learningtransport` folder, restart all endpoints. Validate if Shipping now receives both OrderBilled and OrderPlaced event.
+Stop all processes and delete the `.learningtransport` folder, restart all endpoints. Validate if Shipping now receives both OrderBilled and OrderPlaced events.
 
 ### Step 7
 
-Make sure the naming convention for events on the Shipping endpoint supports both the naming convention for OrderPlaced but also the marker interface for the OrderBilled event.
+Make sure the naming convention for events on the Shipping endpoint supports both the naming convention for OrderPlaced and the marker interface for the OrderBilled event.
 
 
 ## Exercise 5.2: Support multiple wire formats
 
-A system very often has to deal with multiple wire formats. Either because of legacy or because or combining systems.
+A system very often has to deal with multiple wire formats. Either because of legacy or because of combining systems.
 
 The following documentation can be used to help implement the solution.
 
@@ -53,19 +53,19 @@ The following documentation can be used to help implement the solution.
 
 ### Step 1
 
-Run the current solution and see that the Billing is correctly subscribed to Sales. Send a few messages via ClientUI and notice how they are processed by Sales, which then publishes an event, which is processed by Billing.
+Run the current solution and verify that the Billing endpoint is correctly subscribed to the Sales endpoint. Send a few messages through ClientUI and notice how they are processed by Sales, which then publishes an event, which is processed by Billing.
 
 ### Step 2
 
-Modify the configuration of Billing. Configure the endpoint to use the JSON serializer;
+Modify the configuration of Billing. Configure the endpoint to use the JSON serializer.
 
 ### Step 3
 
-Run the endpoints and send a few orders via ClientUI. Notice that Billing now receives messages that it fails to process
+Run the endpoints and send a few orders via ClientUI. Notice that Billing now fails to process the events it's subscribed to.
 
 ### Step 4
 
-Configure Billing to also support the previous XML Serializer to deserialize messages.
+Configure Billing to include support for the previous XML Serializer to deserialize messages.
 
 ### Step 5
 
@@ -77,5 +77,5 @@ Upgrade all endpoints to now use JSON as the default message format but make sur
 
 ### Step 6
 
-Verify if all endpoints are now sending messages in JSON format and that no processing errors occur. Open the `learningtransport\audit\.bodies` folder and see that you now have bodies with JSON and XML format. Notice that the order messages audit  will still be in XML. This is important to remember as the same applies to any queue when transitioning to another serializer. Backwards compatibility is important.
+Verify if all endpoints are now sending messages in JSON format and that no processing errors occur. Open the `learningtransport\audit\.bodies` folder and verify that you now see bodies with JSON and XML format. Notice that the order messages in the audit folder will still be in XML. This is important to remember as the same applies to any queue when transitioning to another serializer. Backward compatibility is important.
 

@@ -1,18 +1,16 @@
-﻿using System.Threading.Tasks;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace Billing
+﻿namespace Billing
 {
-    using System;
-    using System.Collections.Generic;
-    using Billing.Shared;
     using Messages.Events;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using Shared;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class OrderPlacedHandler : IHandleMessages<OrderPlaced>
     {
-        static ILog log = LogManager.GetLogger<OrderPlacedHandler>();
-        static List<int> strategicCustomers = Customers.GetStrategicCustomers();
+        private static readonly ILog log = LogManager.GetLogger<OrderPlacedHandler>();
+        private static readonly List<int> strategicCustomers = Customers.GetStrategicCustomers();
 
         public async Task Handle(OrderPlaced message, IMessageHandlerContext context)
         {
@@ -20,7 +18,7 @@ namespace Billing
 
             if (strategicCustomers.Contains(message.CustomerId))
             {
-                Console.WriteLine($"Ignoring order [{message.OrderId}], as [{message.CustomerId}] is a strategic customer.");
+                log.Info($"Ignoring order [{message.OrderId}], as [{message.CustomerId}] is a strategic customer.");
                 return;
             }
 

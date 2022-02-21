@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Messages;
-using NServiceBus;
-
-namespace Billing
+﻿namespace Billing
 {
-    class Program
+    using NServiceBus;
+    using System;
+    using System.Threading.Tasks;
+
+    internal class Program
     {
-        static async Task Main()
+        private static async Task Main()
         {
             Console.Title = "Billing";
 
@@ -18,22 +17,20 @@ namespace Billing
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.EnableInstallers();
 
-            endpointConfiguration.UseSerialization<JsonSerializer>();
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningEventsAs(
-                type => (type.Namespace != null && type.Namespace.EndsWith(".Events"))
-                );
+                type => type.Namespace != null && type.Namespace.EndsWith(".Events")
+            );
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
             Console.WriteLine("Press Enter to exit.");
             Console.ReadLine();
 
-            await endpointInstance.Stop()
-                .ConfigureAwait(false);
+            await endpointInstance.Stop().ConfigureAwait(false);
         }
     }
 }

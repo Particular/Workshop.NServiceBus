@@ -1,17 +1,16 @@
-﻿using System.Threading.Tasks;
-
-namespace Integration.Handlers
+﻿namespace Integration.Handlers
 {
-    using System;
-    using Integration.Messages.Commands;
-    using Integration.Messages.Events;
+    using Messages.Commands;
+    using Messages.Events;
     using NServiceBus;
     using NServiceBus.Logging;
+    using System;
+    using System.Threading.Tasks;
 
     public class SendVerificationEmailHandler : IHandleMessages<SendVerificationEmail>
     {
-        static Random random = new Random();
-        static ILog logger = LogManager.GetLogger<SendVerificationEmailHandler>();
+        private static readonly Random random = new Random();
+        private static readonly ILog logger = LogManager.GetLogger<SendVerificationEmailHandler>();
 
         public async Task Handle(SendVerificationEmail message, IMessageHandlerContext context)
         {
@@ -25,7 +24,7 @@ namespace Integration.Handlers
             };
 
             await context.Publish(@event)
-                .ConfigureAwait(false);
+                         .ConfigureAwait(false);
 
             if (random.Next(0, 4) == 0) throw new InvalidOperationException("Random failure!");
         }

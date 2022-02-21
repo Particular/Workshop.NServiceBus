@@ -1,18 +1,20 @@
-﻿using System;
-using System.Threading.Tasks;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace ClientUI
+﻿namespace ClientUI
 {
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using System;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using UserRegistration.Messages.Commands;
 
-    class Program
+    internal class Program
     {
-        static IEndpointInstance endpointInstance;
+        private static IEndpointInstance endpointInstance;
 
-        static async Task Main()
+        private static readonly ILog log = LogManager.GetLogger<Program>();
+        private static Random rnd = new Random();
+
+        private static async Task Main()
         {
             Console.Title = "ClientUI";
 
@@ -21,26 +23,23 @@ namespace ClientUI
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
             var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
-            conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
+            conventions.DefiningCommandsAs(n =>
+                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+            conventions.DefiningEventsAs(n =>
+                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
 
 
             var routing = transport.Routing();
             routing.RouteToEndpoint(typeof(RegisterNewUser).Assembly, "UserRegistration");
 
-            endpointInstance = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+            endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
             await RunLoop();
 
-            await endpointInstance.Stop()
-                .ConfigureAwait(false);
+            await endpointInstance.Stop().ConfigureAwait(false);
         }
 
-        static ILog log = LogManager.GetLogger<Program>();
-        static Random rnd = new Random();
-
-        static async Task RunLoop()
+        private static async Task RunLoop()
         {
             log.Info("- Press '1' to register a new user and confirm it.");
             log.Info("- Press '2' to register a batch of 10 users.");
@@ -75,8 +74,7 @@ namespace ClientUI
 
         private static Task RegisterNewUser(string name)
         {
-
-            var command = new RegisterNewUser()
+            var command = new RegisterNewUser
             {
                 UserId = Guid.NewGuid(),
                 Name = name,
@@ -88,18 +86,15 @@ namespace ClientUI
             return endpointInstance.Send(command);
         }
 
-        static void RegisterBatchOfUsers()
+        private static void RegisterBatchOfUsers()
         {
             var random = new Random();
             var users = new[] { "Dennis", "Ramon", "Mauro", "Adam", "Udi", "David", "Szymon", "Tomasz", "Sean", "Kim" };
 
-            Parallel.For(0, 10, i => 
-            {
-                RegisterNewUser(users[random.Next(9)]);
-            });
+            Parallel.For(0, 10, i => { RegisterNewUser(users[random.Next(9)]); });
         }
 
-        static string RemoveWhitespace(string name)
+        private static string RemoveWhitespace(string name)
         {
             name = Regex.Replace(name, @"\s+", "");
             return name;

@@ -1,6 +1,6 @@
 ﻿namespace UserRegistration.Messages.Events
 {
-    using UserRegistration.Messages.Entities;
+    using Entities;
 
     public class UserVerificationStarted : UserEntity
     {

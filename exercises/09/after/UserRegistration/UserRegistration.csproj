@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net462</TargetFramework>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="6.4.3" />
-    <PackageReference Include="NServiceBus.CustomChecks" Version="2.0.0" />
-    <PackageReference Include="NServiceBus.Heartbeat" Version="2.0.0" />
-    <PackageReference Include="NServiceBus.Metrics.ServiceControl" Version="2.0.1" />
-    <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="1.2.0" />
-    <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj" />
-    <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj" />
-    <Reference Include="System.ServiceProcess" />
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net461</TargetFramework>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="NServiceBus" Version="7.6.0"/>
+        <PackageReference Include="NServiceBus.CustomChecks" Version="3.0.1"/>
+        <PackageReference Include="NServiceBus.Heartbeat" Version="3.0.1"/>
+        <PackageReference Include="NServiceBus.Metrics.ServiceControl" Version="3.0.6"/>
+        <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.3.0"/>
+        <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj"/>
+        <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
+        <Reference Include="System.ServiceProcess"/>
+    </ItemGroup>
 </Project>

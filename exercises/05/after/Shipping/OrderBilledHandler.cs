@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-using Messages;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace Shipping
+﻿namespace Shipping
 {
-    public class OrderBilledHandler :
-        IHandleMessages<OrderBilled>
+    using Messages.Events;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using System.Threading.Tasks;
+
+    public class OrderBilledHandler : IHandleMessages<OrderBilled>
     {
-        static ILog log = LogManager.GetLogger<OrderBilledHandler>();
+        private static readonly ILog log = LogManager.GetLogger<OrderBilledHandler>();
 
         public Task Handle(OrderBilled message, IMessageHandlerContext context)
         {

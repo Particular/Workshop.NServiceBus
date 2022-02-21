@@ -1,15 +1,13 @@
-﻿using System.Threading.Tasks;
-using Messages;
-using Messages.Events;
-using NServiceBus;
-using NServiceBus.Logging;
-
-namespace Billing
+﻿namespace Billing
 {
-    public class OrderPlacedHandler :
-        IHandleMessages<OrderPlaced>
+    using Messages.Events;
+    using NServiceBus;
+    using NServiceBus.Logging;
+    using System.Threading.Tasks;
+
+    public class OrderPlacedHandler : IHandleMessages<OrderPlaced>
     {
-        static ILog log = LogManager.GetLogger<OrderPlacedHandler>();
+        private static readonly ILog log = LogManager.GetLogger<OrderPlacedHandler>();
 
         public Task Handle(OrderPlaced message, IMessageHandlerContext context)
         {

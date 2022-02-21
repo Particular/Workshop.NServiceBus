@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <LangVersion>7.1</LangVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="6.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Billing.Shared\Billing.Shared.csproj" />
-    <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <LangVersion>7.1</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="NServiceBus" Version="7.6.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Billing.Shared\Billing.Shared.csproj"/>
+        <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj"/>
+    </ItemGroup>
 </Project>

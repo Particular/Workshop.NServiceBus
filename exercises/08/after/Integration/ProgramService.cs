@@ -1,16 +1,15 @@
-﻿using System;
+﻿using NServiceBus;
+using NServiceBus.Logging;
+using System;
 using System.ComponentModel;
 using System.ServiceProcess;
 using System.Threading.Tasks;
-using NServiceBus;
-using NServiceBus.Logging;
 
 [DesignerCategory("Code")]
-class ProgramService : ServiceBase
+internal class ProgramService : ServiceBase
 {
-    IEndpointInstance endpoint;
-
-    static ILog logger;
+    private static readonly ILog logger;
+    private IEndpointInstance endpoint;
 
     static ProgramService()
     {
@@ -27,6 +26,7 @@ class ProgramService : ServiceBase
                 Run(service);
                 return;
             }
+
             Console.Title = "Integration";
             Console.CancelKeyPress += (sender, e) => { service.OnStop(); };
             service.OnStart(null);
@@ -41,7 +41,7 @@ class ProgramService : ServiceBase
         AsyncOnStart().GetAwaiter().GetResult();
     }
 
-    async Task AsyncOnStart()
+    private async Task AsyncOnStart()
     {
         try
         {
@@ -54,13 +54,14 @@ class ProgramService : ServiceBase
             endpointConfiguration.UsePersistence<LearningPersistence>();
 
             var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
-            conventions.DefiningEventsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
+            conventions.DefiningCommandsAs(n =>
+                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+            conventions.DefiningEventsAs(n =>
+                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
 
             endpointConfiguration.EnableInstallers();
 
-            endpoint = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+            endpoint = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
             PerformStartupOperations();
         }
         catch (Exception exception)
@@ -69,17 +70,17 @@ class ProgramService : ServiceBase
         }
     }
 
-    void Exit(string failedToStart, Exception exception)
+    private void Exit(string failedToStart, Exception exception)
     {
         logger.Fatal(failedToStart, exception);
         Environment.FailFast(failedToStart, exception);
     }
 
-    void PerformStartupOperations()
+    private void PerformStartupOperations()
     {
     }
 
-    Task OnCriticalError(ICriticalErrorContext context)
+    private Task OnCriticalError(ICriticalErrorContext context)
     {
         var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
         Exit(fatalMessage, context.Exception);

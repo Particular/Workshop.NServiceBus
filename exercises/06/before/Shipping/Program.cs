@@ -1,29 +1,26 @@
-﻿using Messages;
-using NServiceBus;
-using System;
-using System.Threading.Tasks;
-
-namespace Shipping
+﻿namespace Shipping
 {
-    class Program
+    using NServiceBus;
+    using System;
+    using System.Threading.Tasks;
+
+    internal class Program
     {
-        static async Task Main()
+        private static async Task Main()
         {
             Console.Title = "Shipping";
 
             var endpointConfiguration = CreateConfiguration();
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
             Console.WriteLine("Press Enter to exit.");
             Console.ReadLine();
 
-            await endpointInstance.Stop()
-                .ConfigureAwait(false);
+            await endpointInstance.Stop().ConfigureAwait(false);
         }
 
-        static EndpointConfiguration CreateConfiguration()
+        private static EndpointConfiguration CreateConfiguration()
         {
             var endpointConfiguration = new EndpointConfiguration("Shipping");
             endpointConfiguration.AuditProcessedMessagesTo("audit");
@@ -32,12 +29,12 @@ namespace Shipping
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.EnableInstallers();
 
-            endpointConfiguration.UseSerialization<JsonSerializer>();
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningEventsAs(
-                type => (type.Namespace != null && type.Namespace.EndsWith(".Events")) || typeof(IEvent).IsAssignableFrom(type)
+                type => type.Namespace != null && type.Namespace.EndsWith(".Events") || bleFrom(type)
             );
 
             return endpointConfiguration;

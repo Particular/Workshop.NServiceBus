@@ -1,6 +1,6 @@
 using System;
 
-static class ServiceHelper
+internal static class ServiceHelper
 {
     public static bool IsService()
     {

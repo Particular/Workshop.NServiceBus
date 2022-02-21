@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-
-namespace Integration.Handlers
+﻿namespace Integration.Handlers
 {
-    using Integration.Messages.Commands;
+    using Messages.Commands;
     using NServiceBus;
     using NServiceBus.Logging;
+    using System.Threading.Tasks;
 
     public class AddUserToSystemHandler : IHandleMessages<AddUserToSystem>
     {
-        static ILog logger = LogManager.GetLogger<AddUserToSystemHandler>();
+        private static readonly ILog logger = LogManager.GetLogger<AddUserToSystemHandler>();
 
         public Task Handle(AddUserToSystem message, IMessageHandlerContext context)
         {
