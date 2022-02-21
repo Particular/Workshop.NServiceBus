@@ -4,7 +4,7 @@ Follow the steps on: https://docs.particular.net/tutorials/nservicebus-step-by-s
 
 What changed?
 - Created a new endpoint, Sales
-- Start the Sales endpoint
+- Started the Sales endpoint
 - Moved the handler to the Sales endpoint
 - Send to the new Sales endpoint
 - Set multiple startup projects
