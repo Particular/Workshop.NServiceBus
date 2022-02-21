@@ -16,7 +16,7 @@ In this exercise you'll learn:
 Advanced optional exercises:
 
 - Write errors to the windows event log
-- Write the log file to a different path to run least-priviledge
+- Write the log file to a different path to run least-privilege
 
 ## Exercise 6.1: Hosting as a Windows Service
 
@@ -24,13 +24,18 @@ Endpoints need to be Windows Services so that they can run in the background. We
 
 Documentation:
 
+- https://docs.particular.net/nservicebus/dotnet-templates#nservicebus-endpoint-windows-service
 - https://docs.particular.net/nservicebus/hosting/windows-service#bootstrapping-nuget
-
 
 ### Step 1
 
-Replace the `Program.cs` in the Billing endpoint project with the following code:
+Read the guidance on the *dotnet templates* and *nuget bootstrapping* for Windows Services.
 
+### Step 2
+
+We already have existing projects, neither the *dotnet templates* and *nuget bootstrapping* method will work on an existing project but we will use the template as inspiration.
+
+Copy the `Program.cs` into the Billing endpoint project:
 
 ```
 using Microsoft.Extensions.Hosting;
@@ -56,7 +61,7 @@ internal class Program
 
         builder.ConfigureLogging((ctx, logging) =>
         {
-			//TODO: optionally choose a custom logging library
+			// TODO: optionally choose a custom logging library
 			// https://docs.particular.net/nservicebus/logging/#custom-logging
 
             logging.AddConfiguration(ctx.Configuration.GetSection("Logging"));
@@ -164,15 +169,92 @@ Open `Program.cs` of Billing.
 
 Remove the line `endpointConfiguration.EnableInstallers()`.
 
-Repeat step 2 and 3 for *Sales* and *Shipping*.
+### Step 3
+
+Copy the following code to the endpoint configuration code.
+
+```c#
+if (Environment.UserInteractive && Debugger.IsAttached)
+{
+    endpointConfiguration.EnableInstallers();
+}
+```
+
+### Step 4
+
+Repeat step 2 and 3 for *Sales*, *Shipping* and *ClientUI*.
 
 
-## Exercise 6.2: Override host identifier
+## Exercise 6.2: Configure a custom logging framework
 
-NServiceBus adds some diagnostic meta data to each message it send to the audit queue. It stores some hosting info to identify process and this meta data is used in the particular platform tools to identify logical endpoints. The default implementation included the path where the executable is running from. This conflicts when every new deployment is deployed to a new folder. This is commonly done when using automated deployments like Octopus Deploy.
+The default logging feature only logs to a file and does not support filtering. In this exercise we are going to configure our endpoints to use **NLog** through the Microsoft.Extensions, and write log entries to a file on a path different then the deployed executable.
+
+### Step 1
+
+Add nuget package `NLog.Extensions.Hosting` at the solution level to all projects.
+
+### Step 2
+
+Open the `Program.cs` from *Billing*.
+
+### Step 2
+
+Add the following code to the correct location in the currently opened `Program.cs`:
+
+```c#
+builder.UseNLog();
+```
+
+### Step 3
+
+Run the Billing endpoint and notice startup fails. This is because NLog cannot find its configuration.
+
+### Step 4
+
+Create an `nlog.config` and add the following NLog related snippets to the configuration.
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd"
+      autoReload="true"
+      throwExceptions="false"
+      internalLogLevel="Off" internalLogFile="c:\temp\nlog-internal.log">
+
+
+    <targets>
+        <target xsi:type="File"
+                name="mainLog"
+                fileName="C:\logs\nlog-billing-${shortdate}.log"
+                layout="${longdate} level=${level} source=${callsite} message=${message}"
+                keepFileOpen ="false"
+                concurrentWrites ="true"
+                archiveNumbering="DateAndSequence"
+                archiveAboveSize="1000000"
+                maxArchiveFiles="10"/>
+    </targets>
+
+    <rules>
+        <logger name="*" minlevel="Trace" writeTo="mainLog" />
+    </rules>
+
+</nlog>
+```
+
+### Step 5
+
+Run the Billing endpoint, you should now see Debug output to the console. Also check the folder on `C:/logs` and see if it contains a file called `nlog-shipping-date.log`.
+
+### Step 6
+
+Repeat the same steps for the rest of the projects.
+
+## Exercise 6.3: Override host identifier
+
+NServiceBus add some diagnostic meta data to each message it send to the audit queue. It stores some hosting info to identify process and this meta data is used in the particular platform tools to identify logical endpoints. The default implementation included the path where the executable is running from. This conflicts when every new deployment is deployed to a new folder. This is commonly done when using automated deployments like Octopus Deploy.
 
 We are using Windows Services, we can safely ignore the path as only a single Windows Service can run for a given machine.
-
 
 Documentation:
 
@@ -185,7 +267,7 @@ Read the guidance and identify what by default is used to identify an endpoint i
 
 ### Step 2
 
-Copy the following function to `ProgramService.cs`. The function converts a string to a deterministic guid:
+Copy the following function to `Program.cs`. The function converts a string to a deterministic guid:
 
 ```c#
 static Guid StringToGuid(string value)
@@ -200,7 +282,7 @@ static Guid StringToGuid(string value)
 
 ### Step 3
 
-Add the following lines to `CreateConfiguration`
+Add the following lines to `UseNServiceBus`
 
 ```c#
 var displayName = System.Net.Dns.GetHostName();
@@ -212,9 +294,9 @@ var identifier = StringToGuid("Billing@" + displayName);
 Based on the [guidance](https://docs.particular.net/nservicebus/hosting/override-hostid) extend the `endpointConfiguration` with the right calls using the values from Step 3.
 
 
-## Advanced Exercise: 6.3: Log errors to the Windows Event Log
+## Advanced Exercise: 6.4: Log errors to the Windows Event Log
 
-Serious errors are often written to the Windows Event Log. Since we're already making use of the Microsoft.Extensions.Logging abstraction, we can enable logging to the eventlog with a simple call to:
+Serious errors are often written to the Windows Event Log. Since we're already making use of the Microsoft.Extensions.Logging abstraction, we can enable logging to the EventLog with a simple call to:
 ```
 builder.ConfigureLogging((ctx, logging) =>
 {
@@ -235,7 +317,7 @@ New-EventLog -LogName Application -Source "RetailDemo"
 
 ### Step 2
 
-Add the following eventlog section to the`appsettings.json` under the `Logging`-section.
+Add the following EventLog section to the`appsettings.json` under the `Logging`-section.
 
 ```json
 "EventLog": {
@@ -248,20 +330,3 @@ Add the following eventlog section to the`appsettings.json` under the `Logging`-
 ### Step 3
 
 Run the endpoint and validate if the events are written the the Windows Application Event Log.
-
-
-## Advanced Exercise 6.4: Log additional diagnostic data
-
-Some very hard to find issues are exceptions that are handled, but not rethrown. You lose valuable exception information. Usually this happens in code that you control but sometimes this happens in assemblies not maintained by you. There is a way to still capture this information by listening certain appdomain events.
-
-### Step 1
-
-Open the file `Program.cs` from the Billing project.
-
-### Step 2
-
-Add the following lines to log additional errors.
-
-```c#
-AppDomain.CurrentDomain.UnhandledException += (sender, args) => LogManager.GetLogger("UnhandledException").Fatal(args.ExceptionObject.GetType().Name, (Exception)args.ExceptionObject);
-```

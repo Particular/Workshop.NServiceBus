@@ -14,12 +14,10 @@ In this exercise you'll learn:
 - Understand the usage differences of endpoint create and endpoint start
 - Make the process compatible with automated deployments
 
-
 Advanced optional exercises:
 
 - Write errors to the windows event log
-- Write the log file to a different path to run least-priviledge
-
+- Write the log file to a different path to run least-privilege
 
 ## Exercise 6.1: Hosting as a Windows Service
 
@@ -357,7 +355,7 @@ New-EventLog -LogName Application -Source "RetailDemo"
 
 ### Step 2
 
-Add the following NLog target to the NLog section of the existing `App.config`. 
+Add the following NLog target to the NLog section of the existing `App.config`.
 
 ```xml
 <target name="eventlog" xsi:type="EventLog"  layout="${logger}|${message}${onexception:${newline}${exception:format=tostring}}" source="RetailDemo" log="Application"/>

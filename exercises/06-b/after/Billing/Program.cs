@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Hosting;
+using NLog.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -28,7 +30,7 @@ internal class Program
             logging.AddEventLog();
             logging.AddConsole();
 
-        });
+        }).UseNLog();
 
         builder.UseNServiceBus(ctx =>
         {

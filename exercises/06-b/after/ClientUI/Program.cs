@@ -4,7 +4,9 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using NLog.Extensions.Hosting;
     using NServiceBus;
+    using NServiceBus.Logging;
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
@@ -25,27 +27,30 @@
             {
                 logging.AddConfiguration(ctx.Configuration.GetSection("Logging"));
 
-                //logging.AddEventLog();
+                logging.AddEventLog();
                 logging.AddConsole();
-            });
+            }).UseNLog();
 
             builder.UseNServiceBus(ctx =>
             {
-                //     LogManager.Use<NLogFactory>();
-                //     NLog.LogManager.Configuration.DefaultCultureInfo = System.Globalization.CultureInfo.InvariantCulture;
-                //     log = LogManager.GetLogger<Program>();
                 var endpointConfiguration = new EndpointConfiguration("ClientUI");
                 endpointConfiguration.AuditProcessedMessagesTo("audit");
 
                 var transport = endpointConfiguration.UseTransport<LearningTransport>();
                 endpointConfiguration.SendFailedMessagesTo("error");
-                endpointConfiguration.EnableInstallers();
+
+                if (Environment.UserInteractive && Debugger.IsAttached)
+                {
+                    endpointConfiguration.EnableInstallers();
+                }
 
                 var routing = transport.Routing();
                 routing.RouteToEndpoint(typeof(PlaceOrder), "Sales");
 
                 endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
                 endpointConfiguration.AddDeserializer<XmlSerializer>();
+
+                endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
                 return endpointConfiguration;
             });

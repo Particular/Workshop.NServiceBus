@@ -1,6 +1,7 @@
 ﻿using Messages.Events;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Hosting;
 using NServiceBus;
 using System;
 using System.Diagnostics;
@@ -27,7 +28,7 @@ internal class Program
 
             logging.AddEventLog();
             logging.AddConsole();
-        });
+        }).UseNLog();
 
         builder.UseNServiceBus(ctx =>
         {
@@ -48,6 +49,11 @@ internal class Program
                 type =>
                     type == typeof(OrderPlaced)
             );
+
+            if (Environment.UserInteractive && Debugger.IsAttached)
+            {
+                endpointConfiguration.EnableInstallers();
+            }
 
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
