@@ -84,7 +84,7 @@ Instead of using an SMTP server, we will notify the ClientUI endpoint about the 
 
     - Use the verification code in the incoming event to send a new command to the saga. This command will be used by the saga to verify the verification code and approve the registration.
 
-    - Use [delayed delivery](https://docs.particular.net/nservicebus/messaging/delayed-delivery) on the command to mimic the fact that an email might take time to arrive. Create a static `Random` object in the handler to create a random number of seconds. It would look like this:
+    - Use [delayed delivery](https://docs.particular.net/nservicebus/messaging/delayed-delivery) to mimic the fact that an email might take time to arrive. Create a static `Random` object in the handler to create a random number of seconds. It would look like this:
 
       ```c#
       public class VerificationEmailSentHandler : IHandleMessages<VerificationEmailSent>
