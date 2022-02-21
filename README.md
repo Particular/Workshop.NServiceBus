@@ -29,7 +29,7 @@ Install [Visual Studio 2019](https://www.visualstudio.com) or later (Community, 
 The following frameworks need to be installed:
 
 - .NET Framework 4.6.1
-- .NET Core 6
+- .NET 6
 
 #### Particular Software Platform
 
