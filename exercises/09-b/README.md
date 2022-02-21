@@ -19,6 +19,8 @@ We need to install some components and configure these to use a transport.
 
 Setup *ServiceInsight* as instructed on the [Readme of the repo](https://github.com/Particular/Workshop.NServiceBus).
 
+To set up the Platform tools from scratch without the Platform connection package, follow the documentation:
+
 - https://docs.particular.net/tutorials/monitoring-setup/
 
 ### Step 2
