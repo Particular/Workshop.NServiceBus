@@ -293,3 +293,8 @@ __pycache__/
 
 # NServiceBus LearningTransport
 .learningtransport/
+
+# RavenDB files due to platform connection
+.db/
+.audit-db/
+.logs/
