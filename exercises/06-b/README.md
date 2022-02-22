@@ -87,7 +87,6 @@ internal class Program
 
             endpointConfiguration.AuditProcessedMessagesTo("audit");
 
-            endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
             var displayName = System.Net.Dns.GetHostName();
             var identifier = StringToGuid("Billing@" + displayName);
@@ -134,7 +133,7 @@ Assign the right value to `Console.Title`.
 
 Add a critical error callback to method `OnCriticalError` to the `CreateConfiguration` function as documented on the following location:
 
-- https://docs.particular.net/nservicebus/hosting/cloud-services-host/critical
+- https://docs.particular.net/nservicebus/hosting/critical-errors
 
 
 ### Step 6
