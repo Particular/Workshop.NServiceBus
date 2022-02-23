@@ -85,15 +85,8 @@ internal class Program
                 type => (type.Namespace != null && type.Namespace.EndsWith(".Events"))
             );
 
+            endpointConfiguration.EnableInstallers();
             endpointConfiguration.AuditProcessedMessagesTo("audit");
-
-
-            var displayName = System.Net.Dns.GetHostName();
-            var identifier = StringToGuid("Billing@" + displayName);
-
-            var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
-            endpointIdentity.UsingCustomDisplayName(displayName);
-            endpointIdentity.UsingCustomIdentifier(identifier);
 
             return endpointConfiguration;
         });
