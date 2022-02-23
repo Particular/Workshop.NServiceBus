@@ -111,15 +111,6 @@ internal class Program
             Environment.FailFast(fatalMessage, context.Exception);
         }
     }
-    
-    private static Guid StringToGuid(string value)
-    {
-        using (var md5 = MD5.Create())
-        {
-            var hash = md5.ComputeHash(Encoding.Default.GetBytes(value));
-            return new Guid(hash);
-        }
-    }
 }
 ```
 
@@ -145,7 +136,7 @@ Repeat the previous steps for the *Sales* and *Shipping* projects.
 
 ## Exercise 6.2: Running installers only during setup/installation
 
-The current endpoints always calls `endpointConfiguration.EnableInstallers()` which is not recommended for production. Processes often need additional permissions to create queues and storage schemas and in production it is prefered to run least privileged.
+The current endpoints always calls `endpointConfiguration.EnableInstallers()` which is not recommended for production. Processes often need additional permissions to create queues and storage schemas and in production it is preferred to run least privileged.
 
 ### Step 1
 
@@ -228,6 +219,8 @@ Create an `nlog.config` and add the following NLog related snippets to the confi
 </nlog>
 ```
 
+Make sure to set the file properties of the .config-file to "Copy always".
+
 ### Step 5
 
 Run the Billing endpoint. You should now see Debug output in the console window. Also check the folder on `C:/logs` and see if it contains a file called `nlog-shipping-date.log`.
@@ -238,7 +231,7 @@ Repeat the same steps for the rest of the projects.
 
 ## Exercise 6.3: Override host identifier
 
-NServiceBus add some diagnostic meta data to each message it send to the audit queue. It stores some hosting info to identify process and this meta data is used in the particular platform tools to identify logical endpoints. The default implementation included the path where the executable is running from. This conflicts when every new deployment is deployed to a new folder. This is commonly done when using automated deployments like Octopus Deploy.
+NServiceBus adds some diagnostic meta data to each message it sends to the audit queue. It stores hosting information to identify the process and this meta data is used in the particular platform tools to identify logical endpoints. The default implementation includes the path where the executable is running from. This conflicts when every new deployment is deployed to a new folder. This is commonly done when using automated deployments like Octopus Deploy.
 
 We are using Windows Services, we can safely ignore the path as only a single Windows Service can run for a given machine.
 
@@ -249,7 +242,7 @@ Documentation:
 
 ### Step 1
 
-Read the guidance and identify what by default is used to identify an endpoint instance.
+Read the guidance and identify what is used to identify an endpoint instance by default.
 
 ### Step 2
 
@@ -279,6 +272,13 @@ var identifier = StringToGuid("Billing@" + displayName);
 
 Based on the [guidance](https://docs.particular.net/nservicebus/hosting/override-hostid) extend the `endpointConfiguration` with the right calls using the values from Step 3.
 
+This should result in:
+
+```c#
+var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
+endpointIdentity.UsingCustomDisplayName(displayName);
+endpointIdentity.UsingCustomIdentifier(identifier);
+```
 
 ## Advanced Exercise: 6.4: Log errors to the Windows Event Log
 

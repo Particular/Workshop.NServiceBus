@@ -19,8 +19,7 @@ namespace Shipping
             Console.WriteLine("Press Enter to exit.");
             Console.ReadLine();
 
-            await endpointInstance.Stop()
-                .ConfigureAwait(false);
+            await endpointInstance.Stop().ConfigureAwait(false);
         }
 
         static EndpointConfiguration CreateConfiguration()
