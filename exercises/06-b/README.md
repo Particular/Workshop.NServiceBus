@@ -118,6 +118,15 @@ internal class Program
             Environment.FailFast(fatalMessage, context.Exception);
         }
     }
+    
+    private static Guid StringToGuid(string value)
+    {
+        using (var md5 = MD5.Create())
+        {
+            var hash = md5.ComputeHash(Encoding.Default.GetBytes(value));
+            return new Guid(hash);
+        }
+    }
 }
 ```
 
