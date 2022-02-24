@@ -42,7 +42,7 @@ internal class Program
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
             endpointConfiguration.SendFailedMessagesTo("error");
 
-            endpointConfiguration.LimitMessageProcessingConcurrencyTo(10);
+            endpointConfiguration.LimitMessageProcessingConcurrencyTo(1);
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(n => !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
