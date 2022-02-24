@@ -49,11 +49,11 @@ Look at the dashboard and identify which endpoint, and more specifically which m
 
 Write down 4 ways to increase the throughput besides optimizing the handler in `notes.txt`.
 
-### Step 4
+### Step 7
 
 Increase the maximum concurrency of the processing endpoint to 10.
 
-### Step 5
+### Step 8
 
 Verify that *Critical time* of the endpoint is actually decreasing.
 
