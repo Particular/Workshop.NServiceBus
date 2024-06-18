@@ -19,7 +19,6 @@
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
             var conventions = endpointConfiguration.Conventions();

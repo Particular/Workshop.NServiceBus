@@ -3,10 +3,11 @@ using NServiceBus.Logging;
 using System;
 using System.ComponentModel;
 using System.ServiceProcess;
+using System.Threading;
 using System.Threading.Tasks;
 
 [DesignerCategory("Code")]
-internal class ProgramService : ServiceBase
+internal class ProgramService
 {
     private static readonly ILog logger;
     private IEndpointInstance endpoint;
@@ -23,7 +24,9 @@ internal class ProgramService : ServiceBase
             // to run interactive from a console or as a windows service
             if (ServiceHelper.IsService())
             {
+#pragma warning disable CA1416
                 Run(service);
+#pragma warning restore CA1416
                 return;
             }
 
@@ -47,7 +50,6 @@ internal class ProgramService : ServiceBase
         {
             var endpointConfiguration = new EndpointConfiguration("Integration");
 
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
             endpointConfiguration.UseTransport<LearningTransport>();
@@ -80,7 +82,7 @@ internal class ProgramService : ServiceBase
     {
     }
 
-    private Task OnCriticalError(ICriticalErrorContext context)
+    private Task OnCriticalError(ICriticalErrorContext context, CancellationToken token = default)
     {
         var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
         Exit(fatalMessage, context.Exception);

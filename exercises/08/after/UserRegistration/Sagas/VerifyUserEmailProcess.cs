@@ -76,8 +76,9 @@
 
         protected override void ConfigureHowToFindSaga(SagaPropertyMapper<VerifyUserEmailData> mapper)
         {
-            mapper.ConfigureMapping<RegisterNewUser>(message => message.UserId).ToSaga(saga => saga.UserIdentifier);
-            mapper.ConfigureMapping<UserVerifyingEmail>(message => message.UserId).ToSaga(saga => saga.UserIdentifier);
+            mapper.MapSaga(saga => saga.UserIdentifier)
+                .ToMessage<RegisterNewUser>(message => message.UserId)
+                .ToMessage<UserVerifyingEmail>(message => message.UserId);
         }
 
         public class VerifyUserEmailData : ContainSagaData
