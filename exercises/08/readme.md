@@ -18,7 +18,7 @@ In this exercise you'll learn:
 Verify the setup for `ClientUI` and `UserRegistration` endpoints.
 
 - Notice that the UserRegistration endpoint was set up using our dotnet template. We will later work with the Particular Software dotnet template to add another endpoint.
-- Notice that both endpoints work with the `LearningTransport` and `NewtonsoftSerializer`.
+- Notice that both endpoints work with the `LearningTransport` and `SystemJsonSerializer`.
 - Notice that the ClientUI allows to register either a single user or a batch of users.
 
 ### Step 2
@@ -28,7 +28,7 @@ We want to send a command from `ClientUI` to `UserRegistration` to register the 
 - Create a new command to register a user in the `UserRegistration.Messages` assembly.
   - Add three properties for User Id of the type `Guid`, a name and an email address.
 - In the `ClientUI` endpoint, in the `Program.cs` file, instantiate and send the command.
-- Add the [routing](https://docs.particular.net/nservicebus/messaging/routing?version=core_7#command-routing) to make sure the command arrives in the `UserRegistration` endpoint.
+- Add the [routing](https://docs.particular.net/nservicebus/messaging/routing#command-routing) to make sure the command arrives in the `UserRegistration` endpoint.
 
 ### Step 3
 
