@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFramework>net60</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="NServiceBus" Version="7.6.0"/>
-        <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.3.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+        <PackageReference Include="NServiceBus" Version="8.2.1" />
+        <PackageReference Include="NServiceBus.Extensions.Hosting" Version="2.0.0" />
+        <ProjectReference Include="..\..\..\shared\Shared\Shared.csproj" />
         <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
         <Reference Include="System.ServiceProcess"/>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Handlers\"/>
-        <Folder Include="Sagas\"/>
-        <Folder Include="Timeouts\"/>
+      <Folder Include="Sagas\" />
     </ItemGroup>
 </Project>
