@@ -8,6 +8,7 @@
         <PackageReference Include="NServiceBus" Version="8.2.1" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\..\..\shared\Shared\Shared.csproj" />
         <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj"/>
         <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
     </ItemGroup>

@@ -1,4 +1,6 @@
-﻿namespace ClientUI
+﻿using Shared.Configuration;
+
+namespace ClientUI
 {
     using NServiceBus;
     using NServiceBus.Logging;
@@ -19,19 +21,9 @@
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.Configure(s => { s.RouteToEndpoint(typeof(RegisterNewUser).Assembly, "UserRegistration");});
 
-            var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningCommandsAs(n =>
-                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
-            conventions.DefiningEventsAs(n =>
-                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
-
-
-            var routing = transport.Routing();
-            routing.RouteToEndpoint(typeof(RegisterNewUser).Assembly, "UserRegistration");
-
-            endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
+            endpointInstance = await Endpoint.Start(endpointConfiguration);
 
             await RunLoop();
 
