@@ -17,7 +17,7 @@ In this exercise you'll learn:
 
 Verify the setup for `ClientUI` and `UserRegistration` endpoints.
 
-- Notice that the UserRegistration endpoint was set up using our dotnet template. We will later work with the Particular Software dotnet template to add another endpoint.
+- Notice that the UserRegistration endpoint uses the `Shared` project to be configured.
 - Notice that both endpoints work with the `LearningTransport` and `SystemJsonSerializer`.
 - Notice that the ClientUI allows to register either a single user or a batch of users.
 
@@ -28,7 +28,7 @@ We want to send a command from `ClientUI` to `UserRegistration` to register the 
 - Create a new command to register a user in the `UserRegistration.Messages` assembly.
   - Add three properties for User Id of the type `Guid`, a name and an email address.
 - In the `ClientUI` endpoint, in the `Program.cs` file, instantiate and send the command.
-- Add the [routing](https://docs.particular.net/nservicebus/messaging/routing#command-routing) to make sure the command arrives in the `UserRegistration` endpoint.
+- Add the [routing](https://docs.particular.net/nservicebus/messaging/routing#command-routing) to make sure the command arrives in the `UserRegistration` endpoint. This needs to happen in the `endpointConfiguration.Configure()` call.
 
 ### Step 3
 
@@ -48,9 +48,7 @@ We want to send an email to the user with a verification code. Instead of the sa
 
 In this step we will add the new endpoint.
 
-- [Read the documentation](https://docs.particular.net/nservicebus/dotnet-templates) to install the Particular Software dotnet templates.
-- Install the templates and create and add a new *Windows Service* to the solution. The name of the project should be `Integration`.
-- Set up the Integration endpoint so it is able to communicate with the other endpoints, like transport, etc.
+- Configuration for the endpoint is already set up in `Program.cs`.
 - Create an additional assembly for the messages that are owned by the `Integration` endpoint.
 
 ### Step 5
