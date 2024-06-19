@@ -1,10 +1,10 @@
-﻿using Shared.Configuration;
-
+﻿
 namespace Shipping
 {
     using NServiceBus;
     using System;
     using System.Threading.Tasks;
+    using Shared.Configuration;
 
     internal class Program
     {

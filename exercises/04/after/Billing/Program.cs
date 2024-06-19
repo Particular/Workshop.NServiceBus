@@ -1,10 +1,9 @@
-﻿using Shared.Configuration;
-
-namespace Billing
+﻿namespace Billing
 {
     using NServiceBus;
     using System;
     using System.Threading.Tasks;
+    using Shared.Configuration;
 
     internal class Program
     {

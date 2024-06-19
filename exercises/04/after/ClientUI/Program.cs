@@ -1,12 +1,11 @@
-﻿using Shared.Configuration;
-
-namespace ClientUI
+﻿namespace ClientUI
 {
     using Messages;
     using NServiceBus;
     using NServiceBus.Logging;
     using System;
     using System.Threading.Tasks;
+    using Shared.Configuration;
 
     internal class Program
     {
