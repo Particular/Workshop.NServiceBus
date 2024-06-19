@@ -1,4 +1,6 @@
-﻿namespace Shipping
+﻿using Shared.Configuration;
+
+namespace Shipping
 {
     using NServiceBus;
     using System;
@@ -12,7 +14,7 @@
 
             var endpointConfiguration = new EndpointConfiguration("Shipping");
 
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.Configure();
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 

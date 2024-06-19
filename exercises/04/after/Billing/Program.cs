@@ -1,4 +1,6 @@
-﻿namespace Billing
+﻿using Shared.Configuration;
+
+namespace Billing
 {
     using NServiceBus;
     using System;
@@ -12,7 +14,7 @@
 
             var endpointConfiguration = new EndpointConfiguration("Billing");
 
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.Configure();
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
