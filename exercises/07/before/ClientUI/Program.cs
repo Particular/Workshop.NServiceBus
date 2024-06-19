@@ -1,4 +1,6 @@
-﻿namespace ClientUI
+﻿using Shared.Configuration;
+
+namespace ClientUI
 {
     using Messages.Commands;
     using NServiceBus;
@@ -16,15 +18,10 @@
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
-
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
-
-            var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningCommandsAs(c =>
-                !string.IsNullOrEmpty(c.Namespace) && c.Namespace.EndsWith("Messages.Commands"));
-
-            var routing = transport.Routing();
-            routing.RouteToEndpoint(typeof(PlaceOrder), "Sales");
+            endpointConfiguration.Configure(s =>
+            {
+                s.RouteToEndpoint(typeof(PlaceOrder), "Sales");
+            });
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
