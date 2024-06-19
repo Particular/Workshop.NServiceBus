@@ -1,28 +1,48 @@
-﻿namespace Billing
-{
-    using NServiceBus;
-    using System;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NServiceBus;
+using NServiceBus.Logging;
+using Shared.Configuration;
 
-    internal class Program
+var log = LogManager.GetLogger<Program>();
+
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args)
+    .Build();
+
+var host = Host.CreateDefaultBuilder(args)
+    .UseNServiceBus(context =>
     {
-        private static async Task Main()
-        {
-            Console.Title = "Billing.Strategic";
+        var endpointConfiguration = new EndpointConfiguration("Billing.Strategic");
+        endpointConfiguration.Configure();
+        endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            var endpointConfiguration = new EndpointConfiguration("Billing.Strategic");
+        return endpointConfiguration;
+    }).Build();
 
-            endpointConfiguration.UseTransport<LearningTransport>();
-            var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningEventsAs(c =>
-                !string.IsNullOrEmpty(c.Namespace) && c.Namespace.EndsWith("Messages.Events"));
+var hostEnvironment = host.Services.GetRequiredService<IHostEnvironment>();
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
+Console.Title = hostEnvironment.ApplicationName;
 
-            Console.WriteLine("Press Enter to exit.");
-            Console.ReadLine();
+host.Run();
 
-            await endpointInstance.Stop().ConfigureAwait(false);
-        }
-    }
+return;
+
+Task OnCriticalError(ICriticalErrorContext context, CancellationToken token = default)
+{
+    var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
+    Exit(fatalMessage, context.Exception);
+    return Task.FromResult(0);
+}
+
+void Exit(string failedToStart, Exception exception)
+{
+    log.Fatal(failedToStart, exception);
+    Environment.FailFast(failedToStart, exception);
 }
