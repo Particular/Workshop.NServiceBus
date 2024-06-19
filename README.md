@@ -21,14 +21,13 @@ To complete the exercises, you require a Windows machine and Visual Studio.
 
 #### Visual Studio
 
-Install [Visual Studio 2022](https://www.visualstudio.com) or later (Community, Professional, or Enterprise) with the following workloads:
+Install JetBrains Rider 2021.3 or later, or [Visual Studio 2022](https://www.visualstudio.com) or later (Community, Professional, or Enterprise) with the following workloads:
 
 - .NET desktop development
 - ASP.NET and web development
 
 The following frameworks need to be installed:
 
-- .NET Framework 4.6.1
 - .NET 6
 
 #### Particular Software Platform
