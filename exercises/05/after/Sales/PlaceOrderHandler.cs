@@ -8,8 +8,7 @@ namespace Sales
     using NServiceBus.Logging;
     using System.Threading.Tasks;
 
-    public class PlaceOrderHandler :
-        IHandleMessages<PlaceOrder>
+    public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
     {
         private static readonly ILog log = LogManager.GetLogger<PlaceOrderHandler>();
 
