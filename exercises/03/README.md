@@ -3,6 +3,7 @@
 Follow the steps on: https://docs.particular.net/tutorials/nservicebus-step-by-step/4-publishing-events/
 
 What changed?
+
 - Created 2 new endpoints: Billing and Shipping
 - Start both endpoints
 - Modify the PlaceOrderHandler to publish an event
