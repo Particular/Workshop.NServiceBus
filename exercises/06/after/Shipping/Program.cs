@@ -1,4 +1,3 @@
-using Messages.Events;
 using NServiceBus;
 using NServiceBus.Logging;
 using System;
@@ -12,16 +11,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 [DesignerCategory("Code")]
-internal class ProgramService : ServiceBase
+internal class Program
 {
     private static readonly ILog logger;
     private IEndpointInstance endpoint;
 
-    static ProgramService()
+    static Program()
     {
         LogManager.Use<NLogFactory>();
         NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
-        logger = LogManager.GetLogger<ProgramService>();
+        logger = LogManager.GetLogger<Program>();
 
         AppDomain.CurrentDomain.UnhandledException += (sender, ea) =>
             LogManager.GetLogger("UnhandledException")
@@ -44,7 +43,7 @@ internal class ProgramService : ServiceBase
             return;
         }
 
-        using (var service = new ProgramService())
+        using (var service = new Program())
         {
             // to run interactive from a console or as a windows service
             if (!Environment.UserInteractive)
@@ -53,7 +52,7 @@ internal class ProgramService : ServiceBase
                 return;
             }
 
-            Console.Title = "Sales";
+            Console.Title = "Shipping";
             Console.CancelKeyPress += (sender, e) => { service.OnStop(); };
             service.OnStart(null);
             Console.WriteLine("\r\nPress enter key to stop program\r\n");
@@ -108,27 +107,24 @@ internal class ProgramService : ServiceBase
 
     private static EndpointConfiguration CreateConfiguration()
     {
-        var endpointConfiguration = new EndpointConfiguration("Sales");
+        var endpointConfiguration = new EndpointConfiguration("Shipping");
         endpointConfiguration.AuditProcessedMessagesTo("audit");
 
         var transport = endpointConfiguration.UseTransport<LearningTransport>();
-
-        var recoverability = endpointConfiguration.Recoverability();
-        recoverability.Delayed(delayed => delayed.NumberOfRetries(0));
 
         endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
         endpointConfiguration.AddDeserializer<XmlSerializer>();
 
         var conventions = endpointConfiguration.Conventions();
         conventions.DefiningEventsAs(
-            type =>
-                type == typeof(OrderPlaced)
+            type => type.Namespace != null && type.Namespace.EndsWith(".Events") ||
+                    typeof(IEvent).IsAssignableFrom(type)
         );
 
         endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
         var displayName = Dns.GetHostName();
-        var identifier = StringToGuid("Sales@" + displayName);
+        var identifier = StringToGuid("Shipping@" + displayName);
 
         var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
         endpointIdentity.UsingCustomDisplayName(displayName);

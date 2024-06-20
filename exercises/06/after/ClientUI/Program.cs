@@ -13,8 +13,6 @@
 
         private static async Task Main()
         {
-            LogManager.Use<NLogFactory>();
-            NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
             log = LogManager.GetLogger<Program>();
 
             Console.Title = "ClientUI";
