@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net60</TargetFramework>
         <OutputType>Exe</OutputType>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="NServiceBus" Version="8.2.1" />
