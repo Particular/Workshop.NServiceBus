@@ -3,6 +3,7 @@
     using NServiceBus;
     using System;
     using System.Threading.Tasks;
+    using Shared.Configuration;
 
     internal class Program
     {
@@ -12,8 +13,10 @@
 
             var endpointConfiguration = new EndpointConfiguration("Sales");
 
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.Configure();
 
+            // TODO: Wat moet hier mee?
+            
             // endpointConfiguration.Recoverability().Immediate(settings => settings.NumberOfRetries(2));
             // endpointConfiguration.Recoverability().Delayed(settings => settings.NumberOfRetries(5));
 

@@ -1,4 +1,4 @@
-namespace Messages
+namespace Messages.Events
 {
     using NServiceBus;
 

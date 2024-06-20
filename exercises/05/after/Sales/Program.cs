@@ -1,9 +1,9 @@
 ﻿namespace Sales
 {
-    using Messages.Events;
     using NServiceBus;
     using System;
     using System.Threading.Tasks;
+    using Messages.Events;
 
     internal class Program
     {
@@ -18,7 +18,7 @@
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.EnableInstallers();
 
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+            endpointConfiguration.UseSerialization<SystemJsonSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
             var conventions = endpointConfiguration.Conventions();

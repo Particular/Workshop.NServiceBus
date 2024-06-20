@@ -1,10 +1,11 @@
 ﻿namespace ClientUI
 {
-    using Messages;
+    using Messages.Commands;
     using NServiceBus;
     using NServiceBus.Logging;
     using System;
     using System.Threading.Tasks;
+    using Shared.Configuration;
 
     internal class Program
     {
@@ -16,10 +17,7 @@
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
 
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
-
-            var routing = transport.Routing();
-            routing.RouteToEndpoint(typeof(PlaceOrder), "Sales");
+            endpointConfiguration.Configure(configureRouting => configureRouting.RouteToEndpoint(typeof(PlaceOrder), "Sales"));
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                                                  .ConfigureAwait(false);
