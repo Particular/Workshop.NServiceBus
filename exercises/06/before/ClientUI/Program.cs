@@ -4,14 +4,17 @@
     using NServiceBus;
     using NServiceBus.Logging;
     using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     internal class Program
     {
-        private static readonly ILog log = LogManager.GetLogger<Program>();
+        private static ILog log;
 
         private static async Task Main()
         {
+            log = LogManager.GetLogger<Program>();
+
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
@@ -24,14 +27,17 @@
             var routing = transport.Routing();
             routing.RouteToEndpoint(typeof(PlaceOrder), "Sales");
 
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+            endpointConfiguration.UseSerialization<SystemJsonSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration)
+                                                 .ConfigureAwait(false);
 
-            await RunLoop(endpointInstance).ConfigureAwait(false);
+            await RunLoop(endpointInstance)
+                .ConfigureAwait(false);
 
-            await endpointInstance.Stop().ConfigureAwait(false);
+            await endpointInstance.Stop()
+                                  .ConfigureAwait(false);
         }
 
         private static async Task RunLoop(IEndpointInstance endpointInstance)

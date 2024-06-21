@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFramework>net60</TargetFramework>
         <LangVersion>10</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="NServiceBus" Version="7.6.0"/>
+        <PackageReference Include="NServiceBus" Version="8.2.1" />
     </ItemGroup>
 </Project>
