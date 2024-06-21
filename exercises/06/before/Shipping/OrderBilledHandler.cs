@@ -1,4 +1,6 @@
-﻿namespace Shipping
+﻿using Messages.Events;
+
+namespace Shipping
 {
     using Messages;
     using NServiceBus;

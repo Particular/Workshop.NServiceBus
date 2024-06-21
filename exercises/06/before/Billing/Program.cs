@@ -1,43 +1,5 @@
-﻿namespace Billing
-{
-    using NServiceBus;
-    using System;
-    using System.Threading.Tasks;
+using NServiceBus.Logging;
 
-    internal class Program
-    {
-        private static async Task Main()
-        {
-            Console.Title = "Billing";
+var endpointName = "Billing";
 
-            var endpointConfiguration = CreateConfiguration();
-
-            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
-
-            Console.WriteLine("Press Enter to exit.");
-            Console.ReadLine();
-
-            await endpointInstance.Stop().ConfigureAwait(false);
-        }
-
-        private static EndpointConfiguration CreateConfiguration()
-        {
-            var endpointConfiguration = new EndpointConfiguration("Billing");
-            endpointConfiguration.AuditProcessedMessagesTo("audit");
-
-            var transport = endpointConfiguration.UseTransport<LearningTransport>();
-            endpointConfiguration.SendFailedMessagesTo("error");
-            endpointConfiguration.EnableInstallers();
-
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-            endpointConfiguration.AddDeserializer<XmlSerializer>();
-
-            var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningEventsAs(
-                type => type.Namespace != null && type.Namespace.EndsWith(".Events")
-            );
-
-            return endpointConfiguration;
-        }
-    }
-}
+var log = LogManager.GetLogger<Program>();

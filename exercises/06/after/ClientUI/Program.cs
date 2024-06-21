@@ -13,8 +13,6 @@
 
         private static async Task Main()
         {
-            LogManager.Use<NLogFactory>();
-            NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
             log = LogManager.GetLogger<Program>();
 
             Console.Title = "ClientUI";
@@ -29,7 +27,7 @@
             var routing = transport.Routing();
             routing.RouteToEndpoint(typeof(PlaceOrder), "Sales");
 
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+            endpointConfiguration.UseSerialization<SystemJsonSerializer>();
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)

@@ -1,6 +1,7 @@
 namespace Sales
 {
-    using Messages;
+    using Messages.Commands;
+    using Messages.Events;
     using NServiceBus;
     using NServiceBus.Logging;
     using System;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<license type="Trial" Applications="All" expiration="2019-12-31" id="024fcaca-5e8b-4176-ba3a-b1a1e5a098b5">
-  <name>ramon.smits@particular.net</name>
+<license type="Non-Production Development" Applications="All" expiration="2024-09-17" id="b826f0bb-0db4-46a7-b65d-f8693308f343">
+  <name>dennis.vanderstelt@particular.net</name>
   <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
     <SignedInfo>
       <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
@@ -10,9 +10,9 @@
           <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
         </Transforms>
         <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <DigestValue>Cv2gMpyAUC67V1dBVbOiGFRY4aw=</DigestValue>
+        <DigestValue>V+MAiK2zaYYzExL4raACaNmWAvI=</DigestValue>
       </Reference>
     </SignedInfo>
-    <SignatureValue>aK/5beJ7PEzvBEFMY2cdtRz2XV6TcCnNQGRK78q8qaK1bGAX8bg9Dc4Lujq2aZpg3XOb5LjN5IW38HHRZhxS78ig0xt6Wu8XamOmOEB5sTRoSWKHQL2Lfo6mYyc7sTb1MpU2z46RRtfV0wkrcJbHMe7gWigf++FJcxEu/GEi1uw=</SignatureValue>
+    <SignatureValue>qtyCeL6KyjuxDA31MkkQtCYCP+b4xP5a9DHZfTLy7En/N/SPcu5a535JTcj2HR9an2KBfW0rNdexZ7HB9Pl/N+nabnUB0HxDIDYeYkSxHqkoCK/qNkdkJbd/AXkA+4JlBT8NWjBDZhJuYfeJmI+iMTcxVR5PhD+XDzCundFPieI=</SignatureValue>
   </Signature>
 </license>

@@ -1,10 +1,13 @@
-﻿namespace ClientUI
+﻿using Shared.Configuration;
+
+namespace ClientUI
 {
     using NServiceBus;
     using NServiceBus.Logging;
     using System;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using UserRegistration.Messages.Commands;
 
     internal class Program
     {
@@ -18,16 +21,9 @@
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-            endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.Configure();
 
-            var conventions = endpointConfiguration.Conventions();
-            conventions.DefiningCommandsAs(n =>
-                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
-            conventions.DefiningEventsAs(n =>
-                !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
-
-            endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
+            endpointInstance = await Endpoint.Start(endpointConfiguration);
 
             await RunLoop();
 
@@ -69,11 +65,9 @@
 
         private static Task RegisterNewUser(string name)
         {
-            // Instantiate the command to register a new user
-
             Console.WriteLine($"\tAsked to register {name}");
 
-            // Send command
+            // Send the user registration command
 
             return Task.CompletedTask;
         }

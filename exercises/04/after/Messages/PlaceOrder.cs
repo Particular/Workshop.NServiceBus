@@ -1,4 +1,4 @@
-namespace Messages
+namespace Messages.Commands
 {
     using NServiceBus;
 

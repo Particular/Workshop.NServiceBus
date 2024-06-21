@@ -2,11 +2,9 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <LangVersion>7.1</LangVersion>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="NServiceBus" Version="7.6.0"/>
-        <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.3.0"/>
         <ProjectReference Include="..\Messages\Messages.csproj"/>
     </ItemGroup>
 </Project>
