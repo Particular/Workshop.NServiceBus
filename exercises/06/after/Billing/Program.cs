@@ -8,14 +8,18 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NServiceBus;
 using NServiceBus.Logging;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+
+var endpointName = "Billing";
 
 var log = LogManager.GetLogger<Program>();
 
 var switchMappings = new Dictionary<string, string>()
 {
-    { "-ri", "RunInstallers" },
+    { "--ri", "RunInstallers" },
 };
 
 var configuration = new ConfigurationBuilder()
@@ -24,37 +28,39 @@ var configuration = new ConfigurationBuilder()
     .AddCommandLine(args, switchMappings)
     .Build();
 
-var shouldIRunInstallers = (Environment.UserInteractive && Debugger.IsAttached) || !string.IsNullOrEmpty(configuration["RunInstallers"]);
+var shouldIRunInstallers = (Environment.UserInteractive && Debugger.IsAttached) ||
+                           !string.IsNullOrEmpty(configuration["RunInstallers"]);
 
 var host = Host.CreateDefaultBuilder(args)
-    .UseNServiceBus(context =>
+    .UseConsoleLifetime()
+    .ConfigureLogging(logging =>
     {
-        var endpointConfiguration = new EndpointConfiguration("Billing");
-        Configure(endpointConfiguration);
+        logging.AddConsole();
+        logging.SetMinimumLevel(LogLevel.Information);
+    })    
+.UseNServiceBus(context =>
+{
+    var endpointConfiguration = new EndpointConfiguration(endpointName);
+    Configure(endpointConfiguration);
 
-        // Add another deserializer for backwards compatibility
-        endpointConfiguration.AddDeserializer<XmlSerializer>();
+    if (shouldIRunInstallers)
+    {
+        endpointConfiguration.EnableInstallers();
+    }
 
-        // We don't want to run installers in production, except explicitly stated
-        if (shouldIRunInstallers)
-        {
-            endpointConfiguration.EnableInstallers();
-        }
+    // Get a unique id
+    var displayName = System.Net.Dns.GetHostName();
+    var identifier = StringToGuid("Billing@" + displayName);
+    //
+    var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
+    endpointIdentity.UsingCustomDisplayName(displayName);
+    endpointIdentity.UsingCustomIdentifier(identifier);
 
-        // For uniquely identifying each instance
-        // This is particularly important in cloud scenarios that automatically scale out
-        var displayName = System.Net.Dns.GetHostName();
-        var identifier = StringToGuid("Billing@" + displayName);
-        //
-        var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
-        endpointIdentity.UsingCustomDisplayName(displayName);
-        endpointIdentity.UsingCustomIdentifier(identifier);
+    // Make sure critical exceptions are caught
+    endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-        // Make sure critical exceptions are caught
-        endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-
-        return endpointConfiguration;
-    }).Build();
+    return endpointConfiguration;
+}).Build();
 
 var hostEnvironment = host.Services.GetRequiredService<IHostEnvironment>();
 
@@ -82,8 +88,14 @@ async Task OnCriticalError(ICriticalErrorContext context, CancellationToken toke
 
 void Exit(string failedToStart, Exception exception)
 {
-    log.Fatal(failedToStart, exception);
-    Environment.FailFast(failedToStart, exception);
+    try
+    {
+        log.Fatal(failedToStart, exception);
+    }
+    finally
+    {
+        Environment.FailFast(failedToStart, exception);
+    }
 }
 
 Guid StringToGuid(string value)
@@ -95,7 +107,7 @@ Guid StringToGuid(string value)
     }
 }
 
-EndpointConfiguration Configure(
+void Configure(
     EndpointConfiguration endpointConfiguration,
     Action<RoutingSettings<LearningTransport>> configureRouting = null!)
 {
@@ -116,10 +128,6 @@ EndpointConfiguration Configure(
     conventions.DefiningEventsAs(n =>
         !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
 
-    endpointConfiguration.EnableInstallers();
-
     var routing = transport.Routing();
     configureRouting?.Invoke(routing);
-
-    return endpointConfiguration;
 }

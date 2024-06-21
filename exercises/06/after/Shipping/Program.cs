@@ -1,144 +1,133 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NServiceBus;
 using NServiceBus.Logging;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Net;
-using System.Security.Cryptography;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-[DesignerCategory("Code")]
-internal class Program
+var endpointName = "Shipping";
+
+var log = LogManager.GetLogger<Program>();
+
+var switchMappings = new Dictionary<string, string>()
 {
-    private static readonly ILog logger;
-    private IEndpointInstance endpoint;
+    { "--ri", "RunInstallers" },
+};
 
-    static Program()
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args, switchMappings)
+    .Build();
+
+var shouldIRunInstallers = (Environment.UserInteractive && Debugger.IsAttached) ||
+                           !string.IsNullOrEmpty(configuration["RunInstallers"]);
+
+var host = Host.CreateDefaultBuilder(args)
+    .UseConsoleLifetime()
+    .ConfigureLogging(logging =>
     {
-        LogManager.Use<NLogFactory>();
-        NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
-        logger = LogManager.GetLogger<Program>();
+        logging.AddConsole();
+        logging.SetMinimumLevel(LogLevel.Information);
+    })    
+.UseNServiceBus(context =>
+{
+    var endpointConfiguration = new EndpointConfiguration(endpointName);
+    Configure(endpointConfiguration);
 
-        AppDomain.CurrentDomain.UnhandledException += (sender, ea) =>
-            LogManager.GetLogger("UnhandledException")
-                      .Fatal(ea.ExceptionObject.GetType().Name, (Exception)ea.ExceptionObject);
-        AppDomain.CurrentDomain.FirstChanceException += (sender, ea) =>
-            LogManager.GetLogger("FirstChanceException." + ea.Exception.GetType().Name)
-                      .Debug(ea.Exception.Message, ea.Exception);
+    if (shouldIRunInstallers)
+    {
+        endpointConfiguration.EnableInstallers();
     }
 
-    private static async Task Main(string[] args)
+    // Get a unique id
+    var displayName = System.Net.Dns.GetHostName();
+    var identifier = StringToGuid("Billing@" + displayName);
+    //
+    var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
+    endpointIdentity.UsingCustomDisplayName(displayName);
+    endpointIdentity.UsingCustomIdentifier(identifier);
+
+    // Make sure critical exceptions are caught
+    endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
+
+    return endpointConfiguration;
+}).Build();
+
+var hostEnvironment = host.Services.GetRequiredService<IHostEnvironment>();
+
+Console.Title = hostEnvironment.ApplicationName;
+
+host.Run();
+
+return;
+
+async Task OnCriticalError(ICriticalErrorContext context, CancellationToken token)
+{
+    var fatalMessage = string.Empty;
+    try
     {
-        if (args.Length == 1 && args[0] == "install")
-        {
-            await Console.Out.WriteLineAsync("Running installers...")
-                         .ConfigureAwait(false);
-            var endpointConfiguration = CreateConfiguration();
-            endpointConfiguration.EnableInstallers();
-            await Endpoint.Create(endpointConfiguration)
-                          .ConfigureAwait(false);
-            return;
-        }
-
-        using (var service = new Program())
-        {
-            // to run interactive from a console or as a windows service
-            if (!Environment.UserInteractive)
-            {
-                Run(service);
-                return;
-            }
-
-            Console.Title = "Shipping";
-            Console.CancelKeyPress += (sender, e) => { service.OnStop(); };
-            service.OnStart(null);
-            Console.WriteLine("\r\nPress enter key to stop program\r\n");
-            Console.Read();
-            service.OnStop();
-        }
+        fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
+        // Try to stop the endpoint.
+        // When it is stopped, attempts to send messages will cause an ObjectDisposedException.
+        await context.Stop(token);
     }
-
-    protected override void OnStart(string[] args)
+    finally
     {
-        AsyncOnStart().GetAwaiter().GetResult();
+        Exit(fatalMessage, context.Exception);
     }
+}
 
-    private async Task AsyncOnStart()
+void Exit(string failedToStart, Exception exception)
+{
+    try
     {
-        try
-        {
-            var endpointConfiguration = CreateConfiguration();
-            if (Environment.UserInteractive && Debugger.IsAttached) endpointConfiguration.EnableInstallers();
-            endpoint = await Endpoint.Start(endpointConfiguration)
-                                     .ConfigureAwait(false);
-        }
-        catch (Exception exception)
-        {
-            Exit("Failed to start", exception);
-        }
+        log.Fatal(failedToStart, exception);
     }
-
-    private static void Exit(string failedToStart, Exception exception)
+    finally
     {
-        logger.Fatal(failedToStart, exception);
-        //TODO: When using an external logging framework it is important to flush any pending entries prior to calling FailFast
-        // https://docs.particular.net/nservicebus/hosting/critical-errors#when-to-override-the-default-critical-error-action
-        NLog.LogManager.Shutdown();
-
-        //TODO: https://docs.particular.net/nservicebus/hosting/windows-service#installation-restart-recovery
         Environment.FailFast(failedToStart, exception);
     }
+}
 
-    private static Task OnCriticalError(ICriticalErrorContext context)
+Guid StringToGuid(string value)
+{
+    using (var md5 = MD5.Create())
     {
-        // https://docs.particular.net/nservicebus/hosting/critical-errors
-        var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
-        Exit(fatalMessage, context.Exception);
-        return Task.FromResult(0);
+        var hash = md5.ComputeHash(Encoding.Default.GetBytes(value));
+        return new Guid(hash);
     }
+}
 
-    protected override void OnStop()
-    {
-        endpoint?.Stop().GetAwaiter().GetResult();
-    }
+void Configure(
+    EndpointConfiguration endpointConfiguration,
+    Action<RoutingSettings<LearningTransport>> configureRouting = null!)
+{
+    endpointConfiguration.UseSerialization<SystemJsonSerializer>();
+    endpointConfiguration.Recoverability().Delayed(c => c.NumberOfRetries(0));
 
-    private static EndpointConfiguration CreateConfiguration()
-    {
-        var endpointConfiguration = new EndpointConfiguration("Shipping");
-        endpointConfiguration.AuditProcessedMessagesTo("audit");
+    var transport = endpointConfiguration.UseTransport<LearningTransport>();
 
-        var transport = endpointConfiguration.UseTransport<LearningTransport>();
+    endpointConfiguration.UsePersistence<LearningPersistence>();
 
-        endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-        endpointConfiguration.AddDeserializer<XmlSerializer>();
+    endpointConfiguration.SendFailedMessagesTo("error");
+    endpointConfiguration.AuditProcessedMessagesTo("audit");
 
-        var conventions = endpointConfiguration.Conventions();
-        conventions.DefiningEventsAs(
-            type => type.Namespace != null && type.Namespace.EndsWith(".Events") ||
-                    typeof(IEvent).IsAssignableFrom(type)
-        );
+    var conventions = endpointConfiguration.Conventions();
 
-        endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
+    conventions.DefiningCommandsAs(n =>
+        !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+    conventions.DefiningEventsAs(n =>
+        !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
 
-        var displayName = Dns.GetHostName();
-        var identifier = StringToGuid("Shipping@" + displayName);
-
-        var endpointIdentity = endpointConfiguration.UniquelyIdentifyRunningInstance();
-        endpointIdentity.UsingCustomDisplayName(displayName);
-        endpointIdentity.UsingCustomIdentifier(identifier);
-
-        return endpointConfiguration;
-    }
-
-    private static Guid StringToGuid(string value)
-    {
-        using (var md5 = MD5.Create())
-        {
-            var hash = md5.ComputeHash(Encoding.Default.GetBytes(value));
-            return new Guid(hash);
-        }
-    }
+    var routing = transport.Routing();
+    configureRouting?.Invoke(routing);
 }

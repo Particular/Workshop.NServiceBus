@@ -9,298 +9,231 @@ Now that we understand the fundamentals of NServiceBus it is time to host our so
 
 In this exercise you'll learn:
 
-- How to host an NServiceBus endpoint in production as a windows service
-- Configure a non default logging framework and configure it to log outside of the deployment path
-- Understand the usage differences of endpoint create and endpoint start
+- How to host an NServiceBus endpoint in production as background process
 - Make the process compatible with automated deployments
+- Host endpoints in Docker
 
-Advanced optional exercises:
+## Exercise 6.1: Hosting using Generic Host
 
-- Write errors to the windows event log
-- Write the log file to a different path to run least-privilege
+These days the common way to host anything is using Microsoft's [Generic Host](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host). Most Microsoft documentation is related to ASP.NET but we can perfectly host NServiceBus endpoints using the Generic Host. It extends capabilities for running NServiceBus endpoints in Docker containers, but we'll get back to that later in this exercise.
 
-## Exercise 6.1: Hosting as a Windows Service
-
-Endpoints need to be Windows Services so that they can run in the background.
+On Windows, endpoints need to be Windows Services so that they can run in the background.
 
 Documentation:
 
-- https://docs.particular.net/nservicebus/dotnet-templates#nservicebus-endpoint-windows-service
-- https://docs.particular.net/nservicebus/hosting/windows-service#bootstrapping-nuget
+- https://docs.particular.net/nservicebus/hosting/
+- https://docs.particular.net/nservicebus/dotnet-templates/
+- https://docs.particular.net/nservicebus/hosting/windows-service
+- https://docs.particular.net/nservicebus/hosting/docker-host/
 
 
 ### Step 1
 
 Read the guidance on the *dotnet templates* and *nuget bootstrapping* for Windows Services.
 
+Create an **empty folder** anywhere on disk and run the following commands. The first command will download and install the Particular templates. Because currently these exercises run on .NET 6.0 and NServiceBus 8.x we need to specify a specific version of the templates:
+
+```
+dotnet new install ParticularTemplates::5.*
+```
+The following command will create a new C# project. The `--framework` option was 
+```
+dotnet new nsbendpoint --name MyEndpoint --hosting WindowsService --transport LearningTransport --persistence LearningPersistence --framework net6.0
+```
+
+Now execute the following commands to change the folder to the project and then add a handler:
+
+```
+cd MyEndpoint
+dotnet new nsbhandler --name ClassName --messagetype MyMessage
+```
+
+Open up the project (`.csproj`) file in Visual Studio or JetBrains Rider to see what the output is.
+
 ### Step 2
 
-We already have existing projects, neither the *dotnet templates* and *nuget bootstrapping* method will work on an existing project but we will use the template as inspiration.
+We already have existing projects in our exercise folder, neither the *dotnet templates* and *nuget bootstrapping* method will work on an existing project but we will use the template as inspiration.
 
-Copy the `ProgramService.cs` into the Billing endpoint project:
-
-
-```
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.ServiceProcess;
-using System.Threading.Tasks;
-using NServiceBus;
-using NServiceBus.Logging;
-
-[DesignerCategory("Code")]
-class ProgramService : ServiceBase
-{
-    IEndpointInstance endpoint;
-
-    static ILog logger;
-
-    static ProgramService()
-    {
-        //TODO: optionally choose a custom logging library
-        // https://docs.particular.net/nservicebus/logging/#custom-logging
-        // LogManager.Use<TheLoggingFactory>();
-        logger = LogManager.GetLogger<ProgramService>();
-    }
-
-    public static void Main()
-    {
-        using (var service = new ProgramService())
-        {
-            // to run interactive from a console or as a windows service
-            if (!Environment.UserInteractive)
-            {
-                Run(service);
-                return;
-            }
-            Console.Title = "NServiceBusWindowsService";
-            Console.CancelKeyPress += (sender, e) => { service.OnStop(); };
-            service.OnStart(null);
-            Console.WriteLine("\r\nPress enter key to stop program\r\n");
-            Console.Read();
-            service.OnStop();
-        }
-    }
-
-    protected override void OnStart(string[] args)
-    {
-        AsyncOnStart().GetAwaiter().GetResult();
-    }
-
-    async Task AsyncOnStart()
-    {
-        try
-        {
-            var endpointConfiguration = new EndpointConfiguration("NServiceBusWindowsService");
-
-            //TODO: optionally choose a different serializer
-            // https://docs.particular.net/nservicebus/serialization/
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-
-            endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-
-            //TODO: this is to prevent accidentally deploying to production without considering important actions
-            if (Environment.UserInteractive && Debugger.IsAttached)
-            {
-                //TODO: For production use select a durable transport.
-                // https://docs.particular.net/transports/
-                endpointConfiguration.UseTransport<LearningTransport>();
-
-                //TODO: For production use select a durable persistence.
-                // https://docs.particular.net/persistence/
-                endpointConfiguration.UsePersistence<LearningPersistence>();
-
-                //TODO: For production use script the installation.
-                endpointConfiguration.EnableInstallers();
-            }
-            endpoint = await Endpoint.Start(endpointConfiguration)
-                .ConfigureAwait(false);
-            PerformStartupOperations();
-        }
-        catch (Exception exception)
-        {
-            Exit("Failed to start", exception);
-        }
-    }
-
-    static void Exit(string failedToStart, Exception exception)
-    {
-        logger.Fatal(failedToStart, exception);
-        //TODO: When using an external logging framework it is important to flush any pending entries prior to calling FailFast
-        // https://docs.particular.net/nservicebus/hosting/critical-errors#when-to-override-the-default-critical-error-action
-
-        //TODO: https://docs.particular.net/nservicebus/hosting/windows-service#installation-restart-recovery
-        Environment.FailFast(failedToStart, exception);
-    }
-
-    void PerformStartupOperations()
-    {
-        //TODO: perform any startup operations
-    }
-
-    static Task OnCriticalError(ICriticalErrorContext context)
-    {
-        //TODO: Decide if shutting down the process is the best response to a critical error
-        // https://docs.particular.net/nservicebus/hosting/critical-errors
-        var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
-        Exit(fatalMessage, context.Exception);
-        return Task.FromResult(0);
-    }
-
-    protected override void OnStop()
-    {
-        endpoint?.Stop().GetAwaiter().GetResult();
-        //TODO: perform any shutdown operations
-    }
-}
-```
+We will start with the `Billing` project and slowly add several lines of code to make it work with the Generic Host and NServiceBus.
 
 ### Step  3
 
-Add an assembly reference to `System.ServiceProcess`.
+Add an assembly reference to `NServiceBus.Extensions.Hosting` version `2.0.0` or later, but not `3.0.0`. This references `Microsoft.Extensions.Hosting` and many other NuGet packages needed for the Generic Host in .NET.
 
 ### Step 4
 
-Move the `CreateConfiguration` method from `Program.cs` to `ProgramService.cs`.
+Let's have a look at the `Program` class in `Billing` project. We'll modify it in a way so that it's easy to copy over to the other projects. For this reason we start with the following line. This way we can copy the entire content of this file, modify this line to also modify the different endpoints.
+
+```
+var endpointName = "Billing";
+```
 
 ### Step 5
 
-Remove `Program.cs.`
+Add the following lines, which make sure we can use `appsettings.json` files, environment variables, command-line paramters, etc. This has nothing to do with NServiceBus, but we'll use it later.
+
+```
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args)
+    .Build();
+```
 
 ### Step 6
 
-Replace the `new EndpointConfiguration` in the template with a call to `CreateConfiguration()` like the following:
+The following line will use the Generic Host and start it.
 
 ```
-var endpointConfiguration = CreateConfiguration();
-if (Environment.UserInteractive && Debugger.IsAttached)
+var host = Host.CreateDefaultBuilder(args).Build();
+```
+
+However nothing will be started, we want to use NServiceBus.
+
+```
+var host = Host.CreateDefaultBuilder(args)
+.UseNServiceBus(context =>
 {
-    endpointConfiguration.EnableInstallers();
-}
-endpoint = await Endpoint.Start(endpointConfiguration)
-    .ConfigureAwait(false);
+    var endpointConfiguration = new EndpointConfiguration(endpointName);
+
+    return endpointConfiguration;
+}).Build();
 ```
 
 ### Step 7
 
-Assign the right value to `Console.Title`.
+Create a `Configure()` method that takes our `endpointConfiguration` and adds additional configuration to it. In following exercises, we'll use a similar feature, but in a `Shared` assembly. It contains configuration that is literally used by all our endpoints. For now, we'll create this method and copy the code over to other endpoints in a later step.
+
+```
+EndpointConfiguration Configure(
+    EndpointConfiguration endpointConfiguration,
+    Action<RoutingSettings<LearningTransport>> configureRouting = null!)
+{
+    var transport = endpointConfiguration.UseTransport<LearningTransport>();
+    endpointConfiguration.UsePersistence<LearningPersistence>();
+    
+    endpointConfiguration.SendFailedMessagesTo("error");
+}
+```
+
+This  is enough to start our endpoint, but we want a little bit more...
 
 ### Step 8
 
-Add a critical error callback to method `OnCriticalError` to the `CreateConfiguration` function as documented on the following location:
+We'll first add a serializer:
 
-- https://docs.particular.net/nservicebus/hosting/cloud-services-host/critical
+```
+endpointConfiguration.UseSerialization<SystemJsonSerializer>();
+```
 
+Because this is not production code, but an exercise, we don't want messages to continuously be retried with a delay. You might want to figure out how to immediately fail all messages?
+
+```
+endpointConfiguration.Recoverability().Delayed(c => c.NumberOfRetries(0));
+```
+
+We won't be using audit messages, but you can make it work by adding the following line:
+
+```
+endpointConfiguration.AuditProcessedMessagesTo("audit");
+```
+
+Let's add conventions.
+
+```
+var conventions = endpointConfiguration.Conventions();
+
+conventions.DefiningCommandsAs(n =>
+    !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
+conventions.DefiningEventsAs(n =>
+    !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
+```
+
+Lastly we'll bind any potential routing information:
+
+```
+var routing = transport.Routing();
+configureRouting?.Invoke(routing);
+```
 
 ### Step 7
 
-Repeat the previous steps for the *Sales* and *Shipping* projects.
+Now in our main code, call this new `Configure()` method:
 
+```
+var endpointConfiguration = new EndpointConfiguration(endpointName);
+Configure(endpointConfiguration);
+```
 
+Should we want to add routing information, we'd use it like this. But we don't need that for Billing, we're only subscribing to messages. But we need a similar approach in later exercises.
+
+```
+var endpointConfiguration = new EndpointConfiguration(endpointName);
+Configure(endpointConfiguration, r =>
+{
+    r.RouteToEndpoint(typeof(MyMessage), "MyEndpoint");
+});
+```
 
 ## Exercise 6.2: Running installers only during setup/installation
 
-The current endpoints always calls `endpointConfiguration.EnableInstallers()` which is not recommended for production. Processes often need additional permissions to create queues and storage schemas and in production it is prefered to run least privileged.
+We could call `endpointConfiguration.EnableInstallers()` but this is not recommended for production. Processes often need additional permissions to create queues and storage schemas and in production it is preferred to run least privileged. Let's see how we can make this optional.
 
 ### Step 1
 
-Open `ProgramService.cs` of Billing.
+Open `Program.cs` of Billing.
 
 ### Step 2
 
-Remove the line `endpointConfiguration.EnableInstallers()`.
+We already set configuration to load environment variables, etc. Let's see if we can create a switch mapping. This has nothing to do with NServiceBus, but it's nice to know anyway. Add the following somewhere at the top of the code:
+
+```
+var switchMappings = new Dictionary<string, string>()
+{
+    { "--ri", "RunInstallers" },
+};
+```
+
+Unfortunately we can't do `myApplication.exe RunInstallers` as .NET does not support this. We need to do `runInstallers=true`. But with this, we can add a shortcut and use `--ri=true`. We need to add the `switchMappings` as an argument to the `AddCommandLine()` method call.
+
+```
+.AddCommandLine(args, switchMappings)
+```
+
+Now we can add the command-line argument to this project.
 
 ### Step 3
 
-Copy the following code to the start of the `Main` method.
+Copy the following code _after_ setting the `ConfigurationBuilder`
 
 ```c#
-if (args.Length == 1 && args[0] == "install")
+var shouldIRunInstallers = (Environment.UserInteractive && Debugger.IsAttached) ||
+                           !string.IsNullOrEmpty(configuration["RunInstallers"]);
+```
+
+### Step 4
+
+Now we'll verify if `shouldRunInstallers` is set and potentially call `EnableInstallers()`
+
+```
+.UseNServiceBus(context =>
 {
-    await Console.Out.WriteLineAsync("Running installers...")
-        .ConfigureAwait(false);
-    var endpointConfiguration = CreateConfiguration();
-    endpointConfiguration.EnableInstallers();
-    await Endpoint.Create(endpointConfiguration)
-        .ConfigureAwait(false);
-    return;
+    var endpointConfiguration = new EndpointConfiguration(endpointName);
+    Configure(endpointConfiguration);
+
+    if (shouldIRunInstallers)
+    {
+        endpointConfiguration.EnableInstallers();
+    }
+    
+    // More code hereafter
 }
 ```
 
-### Step 4
-
-Repeat step 2 and 3 for *Sales* and *Shipping*.
-
-
-## Exercise 6.2: Configure a custom logging framework
-
-The default logging feature only logs to a file and does not support filtering. In this exercise we are going to configure our endpoints to use **NLog**, and write log entries to a file on a path different then the deployed executable.
-
-It is important that the logging framework is configured before *any* NServiceBus code is invoked or else the default logger will be used.
-
-### Step 1
-
-Add nuget package `NServiceBus.NLog` version 2.x.x at the solution level to all projects.
-
-### Step 2
-
-Open the `ProgramService.cs` from *Billing*.
-
-### Step 2
-
-Add the following code to the correct location in the currently opened `ProgramService.cs`:
-
-```c#
-NServiceBus.Logging.LogManager.Use<NLogFactory>();
-NLog.LogManager.Configuration.DefaultCultureInfo = CultureInfo.InvariantCulture;
-```
-
-### Step 3
-
-Run the Billing endpoint and notice startup fails. This is because NLog cannot find its configuration.
-
-### Step 4
-
-Create an `App.config` and add the following NLog related snippets to the configuration.
-
-```xml
-<section name="nlog" type="NLog.Config.ConfigSectionHandler, NLog" />
-```
-
-```xml
-<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <targets async="true">
-    <target name="file" xsi:type="File" fileName="trace.log" layout="${longdate:universalTime=true}|${level:uppercase=true}|${threadid:padding=2}|${logger}|${message}${onexception:${newline}${exception:format=tostring}}" />
-    <target name="console" xsi:type="ColoredConsole" layout="${longdate}|${level:uppercase=true}|${threadid:padding=2}|${logger}|${message}${onexception:${exception:format=message}}" />
-  </targets>
-  <rules>
-    <logger name="*" minlevel="Debug" writeTo="console" />
-    <logger name="*" minlevel="Info" writeTo="file" />
-  </rules>
-</nlog>
-```
-
-### Step 5
-
-Run the Billing endpoint, you should now see Debug output to the console. Also check the bin folder and see if it contains a file called `trace.log`.
-
-
-### Step 6
-
-NLog is configured to write log events asynchronously. We need to make sure that NLog gets the opportunity to flush all its log events when endpoint is terminated or else we risk to loose potentially important information of the last few things that happened.
-
-Open `ProgramService.cs` and add the following line to the `Exit` method:
-
-```c#
-NLog.LogManager.Shutdown();
-```
 
 ## Exercise 6.3: Override host identifier
 
-NServiceBus add some diagnostical meta data to each message it send to the audit queue. It stores some hosting info to identify process and this meta data is used in the particular platform tools to identify logical endpoints. The default implementation included the path where the executable is running from. This conflicts when every new deployment is deployed to a new folder. This is commonly done when using automated deployments like Octopus Deploy.
-
-We are using Windows Services, we can safely ignore the path as only a single Windows Service can run for a given machine.
+NServiceBus add some diagnostical meta data to each message it send to the audit queue. It stores some hosting info to identify process and this meta data is used in the particular platform tools to identify logical endpoints. The default implementation included the path where the executable is running from. This conflicts when every new deployment is deployed to a new folder. This is commonly done when using automated deployments like Octopus Deploy. Or when scaling out using Docker.
 
 
 Documentation:
@@ -314,7 +247,7 @@ Read the guidance and identify what by default is used to identify an endpoint i
 
 ### Step 2
 
-Copy the following function to `ProgramService.cs`. The function converts a string to a deterministic guid:
+Copy the following function to `Program.cs` . The function converts a string to a deterministic Guid:
 
 ```c#
 static Guid StringToGuid(string value)
@@ -329,9 +262,10 @@ static Guid StringToGuid(string value)
 
 ### Step 3
 
-Add the following lines to `CreateConfiguration`
+Add the following lines to `UseNServiceBus`
 
 ```c#
+// Get a unique id
 var displayName = System.Net.Dns.GetHostName();
 var identifier = StringToGuid("Billing@" + displayName);
 ```
@@ -340,85 +274,140 @@ var identifier = StringToGuid("Billing@" + displayName);
 
 Based on the [guidance](https://docs.particular.net/nservicebus/hosting/override-hostid) extend the `endpointConfiguration` with the right calls using the values from Step 3.
 
+## Exercise 6.4: Critical errors
 
-## Advanced Exercise: 6.4: Log errors to the Windows Event Log
-
-Serious errors are often written to the Windows Event Log. We are already using NLog for logging and now configure it to log to the Windows Event Log.
+What happens when critical errors occur? This might occur in one thread of NServiceBus, while other threads are busy processing other messages. We need to try and gracefully shut down the endpoint. This is critical as otherwise we might occur message loss and/or database transactions that might be rolled back that should not happen.
 
 ### Step 1
 
-Open a elevated powershell (as admin) and run the following powershell command:
+Copy the following code. It tries to shutdown the endpoint and log the exception.
 
-```ps
-New-EventLog -LogName Application -Source "RetailDemo"
+```
+async Task OnCriticalError(ICriticalErrorContext context, CancellationToken token)
+{
+    var fatalMessage = string.Empty;
+    try
+    {
+        fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
+        // Try to stop the endpoint.
+        // When it is stopped, attempts to send messages will cause an ObjectDisposedException.
+        await context.Stop(token);
+    }
+    finally
+    {
+        Exit(fatalMessage, context.Exception);
+    }
+}
+
+void Exit(string failedToStart, Exception exception)
+{
+    try
+    {
+        log.Fatal(failedToStart, exception);
+    }
+    finally
+    {
+        Environment.FailFast(failedToStart, exception);
+    }
+}
 ```
 
 ### Step 2
 
-Add the following NLog target to the NLog section of the existing `App.config`.
+Now we need to add this to our endpoint configuration.
 
-```xml
-<target name="eventlog" xsi:type="EventLog"  layout="${logger}|${message}${onexception:${newline}${exception:format=tostring}}" source="RetailDemo" log="Application"/>
 ```
+endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
+```
+
+## Exercise 6.5: Using configuration in Sales and Shipping
+
+Let's copy over the configuration to Sales and Shipping.
+
+### Step 1
+
+Copy over all the code from `Program.cs` from `Billing` into `Sales` and `Shipping`
+
+### Step 2
+
+Rename the endpoints according to the endpoint they are in. As otherwise all endpoints are called `Billing`.
+
+```
+var endpointName = "Shipping";
+```
+
+
+
+## Exercise 6.6: Hosting in Docker containers
+
+NServiceBus endpoints can be hosted in Docker containers.
+
+### Step 1
+
+If you're running .NET SDK 8.0.200 or newer _or_ you're creating a container for a website, you don't have to do anything. In our exercise, we'll first need to add a NuGet package `Microsoft.Net.Build.Containers`.
+
+### Step 2
+
+It's important to gracefully stop the NServiceBus endpoint instance running in the Docker container once it is signaled to shut down. This happens in Linux using a `SIGTERM` signal. Quite similar to `CTRL+C` in Windows console applications.
+
+Change the host using the following code:
+
+```c#
+var host = Host.CreateDefaultBuilder(args)
+    .UseConsoleLifetime()
+    .ConfigureLogging(logging =>
+    {
+        logging.AddConsole();
+        logging.SetMinimumLevel(LogLevel.Information);
+    })    
+    .UseNServiceBus(context =>    
+```
+
+The `UseConsoleLifetime()` makes sure that the `SIGTERM` is provided and the means that the following line, which we already have in our code, will be executed:
+
+``` 
+endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
+```
+
+The logging statement means logging will occur in the Docker console as well.
+
+> [!NOTE]
+>
+> If you ever want to create a project using our [templates](https://docs.particular.net/nservicebus/dotnet-templates/), you can do so using the following command:
+> `dotnet new nsbendpoint --hosting docker`
 
 ### Step 3
 
-Add the following logger to the NLog section:
+We need to make sure a license is included in the Docker container. Edit the `.csproj` file and add the following:
 
-```xml
-<logger name="*" minlevel="Debug" writeTo="eventlog" />
 ```
+    <ItemGroup>
+        <None Update="..\..\License.xml" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+```
+
+This copies the included license from the `.\Workshop.NServiceBus\exercises\License.xml` location into the container.
 
 ### Step 4
 
-Run the endpoint and validate if the events are written the the Windows Application Event Log.
-
-
-## Advanced Exercise 6.5: Log additional diagnostical data
-
-Some very hard to find issues are exceptions that are handled, but not rethrown. You loose valuable exception information. Usually this happens in code that you control but sometimes this happens in assemblies not maintained by you. There is a way to still capture this information by listening certain appdomain events.
-
-### Step 1
-
-Open the file `ProgramService.cs` from the Billing project.
-
-### Step 2
-
-Add the following lines to log additional errors.
-
-```c#
-AppDomain.CurrentDomain.UnhandledException += (sender, args) => LogManager.GetLogger("UnhandledException").Fatal(args.ExceptionObject.GetType().Name, (Exception)args.ExceptionObject);
-AppDomain.CurrentDomain.FirstChanceException += (sender, args) => LogManager.GetLogger("FirstChanceException." + args.Exception.GetType().Name).Debug(args.Exception.Message, args.Exception);
-```
-
-### Step 3
-
-Add the following log filter to disable the `FirstChanceException` logger:
-
-```xml
-<logger name="FirstChanceException.*" minlevel="Debug" final="true" />
-```
-
-## Advanced Exercise 6.6: Do not log to application path
-
-In a production environment you would not log to the path where your application assemblies are deployed. The default logger has a `.Directory(string)` method to override the path but we can do something similar with NLog
-
-Documenation:
-
- - https://docs.particular.net/nservicebus/logging/
-
-### Step 1
-
-Open `App.config` from Billing.
-
-### Step 2
-
-Replace the `filename` attribute of the `file` target with the following value which writes the log file to the TEMP path:
+You don't have to execute this, but for reference, we'd build the container images using the following commands:
 
 ```
-${environment:TEMP}\retaildemo\billing.log
+dotnet publish Billing --os linux --arch x64 /t:PublishContainer
+dotnet publish Sales --os linux --arch x64 /t:PublishContainer
+dotnet publish Shipping --os linux --arch x64 /t:PublishContainer
 ```
 
-### Step 3
+### Step 5
 
-Verify that the log file is create in the TEMP path, in a production environment the process only requires read permissions on the location where the endpoint executable is deployed.
+There is a `docker-compose.yml` in the solution folder that can start the containers.
+
+> [!WARNING]
+>
+> There's currently no point in starting them, they containers would not work
+
+Remember that the endpoints all use the *LearningTransport*. This means the transport will try to find the solution file and create a `.learningtransport` folder there, from which each endpoint in the solution will read its messages. This **will not work** in Docker containers.
+
+If you check the `docker-compose.yml` file, you can see an example where each container depends on the RabbitMQ container.
+
+It could be a nice challenge to get this up and running using RabbitMQ, modifying the `Program.cs` code to support this transport (adding the correct NuGet package and all). But this is not required to complete this exercise.
