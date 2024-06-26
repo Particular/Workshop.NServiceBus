@@ -3,7 +3,6 @@
     using NServiceBus;
     using System;
     using System.Threading.Tasks;
-    using Shared.Configuration;
 
     internal class Program
     {
@@ -12,8 +11,8 @@
             Console.Title = "Sales";
 
             var endpointConfiguration = new EndpointConfiguration("Sales");
-
-            endpointConfiguration.Configure();
+            endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 

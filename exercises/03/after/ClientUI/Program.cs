@@ -5,7 +5,6 @@
     using NServiceBus.Logging;
     using System;
     using System.Threading.Tasks;
-    using Shared.Configuration;
 
     internal class Program
     {
@@ -16,8 +15,10 @@
             Console.Title = "ClientUI";
 
             var endpointConfiguration = new EndpointConfiguration("ClientUI");
+            var transport = endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
-            endpointConfiguration.Configure(routing => routing.RouteToEndpoint(typeof(PlaceOrder), "Sales"));
+            transport.Routing().RouteToEndpoint(typeof(PlaceOrder), "Sales");
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
