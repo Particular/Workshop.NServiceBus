@@ -3,7 +3,6 @@
     using NServiceBus;
     using System;
     using System.Threading.Tasks;
-    using Shared.Configuration;
 
     internal class Program
     {
@@ -12,13 +11,15 @@
             Console.Title = "Sales";
 
             var endpointConfiguration = new EndpointConfiguration("Sales");
+            endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
-            endpointConfiguration.Configure();
-
-            // TODO: Wat moet hier mee?
-            
-            // endpointConfiguration.Recoverability().Immediate(settings => settings.NumberOfRetries(2));
-            // endpointConfiguration.Recoverability().Delayed(settings => settings.NumberOfRetries(5));
+            endpointConfiguration.Recoverability().Immediate(s => s.NumberOfRetries(2));
+            endpointConfiguration.Recoverability().Delayed(s =>
+            {
+                s.NumberOfRetries(2);
+                s.TimeIncrease(TimeSpan.FromSeconds(10));
+            });
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
 
