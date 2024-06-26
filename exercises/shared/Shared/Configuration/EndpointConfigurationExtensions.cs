@@ -20,11 +20,6 @@ public static class EndpointConfigurationExtensions
 
         var conventions = endpointConfiguration.Conventions();
 
-        conventions.DefiningCommandsAs(n =>
-            !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Commands"));
-        conventions.DefiningEventsAs(n =>
-            !string.IsNullOrEmpty(n.Namespace) && n.Namespace.EndsWith("Messages.Events"));
-
         endpointConfiguration.EnableInstallers();
 
         configureRouting?.Invoke(routing);
