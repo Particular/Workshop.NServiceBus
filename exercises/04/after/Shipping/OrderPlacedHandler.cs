@@ -1,7 +1,6 @@
 ﻿namespace Shipping
 {
     using Messages.Events;
-    using Messages.Commands;
     using NServiceBus;
     using NServiceBus.Logging;
     using System.Threading.Tasks;
