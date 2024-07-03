@@ -32,10 +32,6 @@ var shouldIRunInstallers = (Environment.UserInteractive && Debugger.IsAttached) 
                            !string.IsNullOrEmpty(configuration["RunInstallers"]);
 
 var builder = new HostBuilder()
-    .ConfigureServices((context, services) =>
-    {
-        services.AddHostedService<SomeBackgroundWorker>();
-    })
     .UseNServiceBus(context =>
     {
         var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
