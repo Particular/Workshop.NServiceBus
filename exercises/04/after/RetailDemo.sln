@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipping", "Shipping\Shippi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing", "Billing\Billing.csproj", "{9DB8125A-5E16-4CA0-9000-9D0F9E9459FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "..\..\shared\Shared\Shared.csproj", "{A406245A-A539-462F-ADFA-18D84E851210}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,8 +28,6 @@ Global
 		{4126CCCB-DC9D-495F-840F-3801AD464BE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DB8125A-5E16-4CA0-9000-9D0F9E9459FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9DB8125A-5E16-4CA0-9000-9D0F9E9459FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A406245A-A539-462F-ADFA-18D84E851210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A406245A-A539-462F-ADFA-18D84E851210}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

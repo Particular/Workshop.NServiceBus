@@ -31,6 +31,17 @@ var configuration = new ConfigurationBuilder()
 var shouldIRunInstallers = (Environment.UserInteractive && Debugger.IsAttached) ||
                            !string.IsNullOrEmpty(configuration["RunInstallers"]);
 
+var builder = new HostBuilder()
+    .UseNServiceBus(context =>
+    {
+        var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
+
+        return endpointConfiguration;
+    });
+await builder.RunAsServiceAsync();
+
+
+
 var host = Host.CreateDefaultBuilder(args)
     .UseConsoleLifetime()
     .ConfigureLogging(logging =>
