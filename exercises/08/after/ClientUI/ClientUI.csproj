@@ -12,9 +12,4 @@
         <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj"/>
         <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
     </ItemGroup>
-    <ItemGroup>
-        <Reference Include="NServiceBus.Newtonsoft.Json">
-            <HintPath>..\..\..\..\..\..\Users\dvdst\.nuget\packages\nservicebus.newtonsoft.json\1.2.0\lib\net452\NServiceBus.Newtonsoft.Json.dll</HintPath>
-        </Reference>
-    </ItemGroup>
 </Project>
