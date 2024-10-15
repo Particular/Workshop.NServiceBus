@@ -58,7 +58,7 @@ We will start with the `Billing` project and slowly add several lines of code to
 
 ### Step  3
 
-Add an assembly reference to `NServiceBus.Extensions.Hosting` version `2.0.0` or later, but not `3.0.0`. This references `Microsoft.Extensions.Hosting` and many other NuGet packages needed for the Generic Host in .NET.
+Add an assembly reference to `NServiceBus.Extensions.Hosting` version `3.0.0` or later. This references `Microsoft.Extensions.Hosting` and many other NuGet packages needed for the Generic Host in .NET.
 
 ### Step 4
 
