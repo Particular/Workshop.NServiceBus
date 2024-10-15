@@ -8,6 +8,6 @@
         <ProjectReference Include="..\Messages\Messages.csproj"/>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="NServiceBus" Version="8.2.1" />
+      <PackageReference Include="NServiceBus" Version="9.2.2" />
     </ItemGroup>
 </Project>
