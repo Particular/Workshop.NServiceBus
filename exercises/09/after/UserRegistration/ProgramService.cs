@@ -4,6 +4,7 @@ using NServiceBus;
 using NServiceBus.Logging;
 using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using UserRegistration.Messages.Commands;
@@ -24,6 +25,11 @@ internal class ProgramService : ServiceBase
     {
         using (var service = new ProgramService())
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                throw new Exception("Services only work on Windows");
+            }
+
             // to run interactive from a console or as a windows service
             if (ServiceHelper.IsService())
             {

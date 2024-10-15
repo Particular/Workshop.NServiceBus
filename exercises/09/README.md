@@ -95,10 +95,6 @@ Add the Nuget package `NServiceBus.CustomChecks` version **2.x.x**.
 
 ### Step 3
 
-Add a reference to `System.Net.Http`.
-
-### Step 4
-
 Add the following custom check code the project:
 
 ```c#
@@ -151,11 +147,11 @@ class ThirdPartyMonitor
 }
 ```
 
-### Step 5
+### Step 4
 
 Make sure the class inherits from the correct base class as can be found in the [custom check documentation](https://docs.particular.net/monitoring/custom-checks/writing-custom-checks).
 
-### Step 6
+### Step 5
 
 Run the endpoints and open *ServicePulse*. Verify how the custom check is reporting its status on the custom check view.
 

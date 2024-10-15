@@ -10,8 +10,7 @@
         <PackageReference Include="NServiceBus.Heartbeat" Version="3.0.1"/>
         <PackageReference Include="NServiceBus.Metrics.ServiceControl" Version="3.0.6"/>
         <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.3.0"/>
+		<PackageReference Include="System.ServiceProcess.ServiceController" Version="8.0.1" />
         <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj"/>
-        <Reference Include="System.Net.Http"/>
-        <Reference Include="System.ServiceProcess"/>
     </ItemGroup>
 </Project>
