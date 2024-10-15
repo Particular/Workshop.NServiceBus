@@ -2,7 +2,6 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <LangVersion>10</LangVersion>
         <RootNamespace>Billing.Regular</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
