@@ -34,7 +34,7 @@ Read the guidance on the *dotnet templates* and *nuget bootstrapping* for Window
 Create an **empty folder** anywhere on disk and run the following commands. The first command will download and install the Particular templates. Because currently these exercises run on .NET 6.0 and NServiceBus 8.x we need to specify a specific version of the templates:
 
 ```
-dotnet new install ParticularTemplates::5.*
+dotnet new install ParticularTemplates::6.*
 ```
 The following command will create a new C# project. The `--framework` option was 
 ```
