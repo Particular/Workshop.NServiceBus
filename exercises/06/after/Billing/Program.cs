@@ -1,3 +1,9 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NServiceBus;
+using NServiceBus.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,12 +11,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NServiceBus;
-using NServiceBus.Logging;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 var endpointName = "Billing";
@@ -31,24 +31,13 @@ var configuration = new ConfigurationBuilder()
 var shouldIRunInstallers = (Environment.UserInteractive && Debugger.IsAttached) ||
                            !string.IsNullOrEmpty(configuration["RunInstallers"]);
 
-var builder = new HostBuilder()
-    .UseNServiceBus(context =>
-    {
-        var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
-
-        return endpointConfiguration;
-    });
-await builder.RunAsServiceAsync();
-
-
-
 var host = Host.CreateDefaultBuilder(args)
     .UseConsoleLifetime()
     .ConfigureLogging(logging =>
     {
         logging.AddConsole();
         logging.SetMinimumLevel(LogLevel.Information);
-    })    
+    })
 .UseNServiceBus(context =>
 {
     var endpointConfiguration = new EndpointConfiguration(endpointName);

@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net60</TargetFramework>
-        <LangVersion>10</LangVersion>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="automapper" Version="6.2.2"/>

@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <LangVersion>10</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="NServiceBus" Version="7.6.0"/>
@@ -11,10 +10,5 @@
     <ItemGroup>
         <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj"/>
         <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="NServiceBus.Newtonsoft.Json">
-            <HintPath>..\..\..\..\..\..\Users\dvdst\.nuget\packages\nservicebus.newtonsoft.json\1.2.0\lib\net452\NServiceBus.Newtonsoft.Json.dll</HintPath>
-        </Reference>
     </ItemGroup>
 </Project>

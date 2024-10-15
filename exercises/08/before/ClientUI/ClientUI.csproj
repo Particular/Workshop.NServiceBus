@@ -1,20 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net60</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <LangVersion>10</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="NServiceBus" Version="8.2.1" />
+        <PackageReference Include="NServiceBus" Version="9.2.2" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\shared\Shared\Shared.csproj" />
         <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="NServiceBus.Newtonsoft.Json">
-            <HintPath>..\..\..\..\..\..\Users\dvdst\.nuget\packages\nservicebus.newtonsoft.json\1.2.0\lib\net452\NServiceBus.Newtonsoft.Json.dll</HintPath>
-        </Reference>
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Handlers\" />

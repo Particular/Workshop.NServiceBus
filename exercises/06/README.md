@@ -34,11 +34,11 @@ Read the guidance on the *dotnet templates* and *nuget bootstrapping* for Window
 Create an **empty folder** anywhere on disk and run the following commands. The first command will download and install the Particular templates. Because currently these exercises run on .NET 6.0 and NServiceBus 8.x we need to specify a specific version of the templates:
 
 ```
-dotnet new install ParticularTemplates::5.*
+dotnet new install ParticularTemplates::6.*
 ```
 The following command will create a new C# project. The `--framework` option was 
 ```
-dotnet new nsbendpoint --name MyEndpoint --hosting WindowsService --transport LearningTransport --persistence LearningPersistence --framework net6.0
+dotnet new nsbendpoint --name MyEndpoint --hosting WindowsService --transport LearningTransport --persistence LearningPersistence --framework net8.0
 ```
 
 Now execute the following commands to change the folder to the project and then add a handler:
@@ -58,7 +58,7 @@ We will start with the `Billing` project and slowly add several lines of code to
 
 ### Step  3
 
-Add an assembly reference to `NServiceBus.Extensions.Hosting` version `2.0.0` or later, but not `3.0.0`. This references `Microsoft.Extensions.Hosting` and many other NuGet packages needed for the Generic Host in .NET.
+Add an assembly reference to `NServiceBus.Extensions.Hosting` version `3.0.0` or later. This references `Microsoft.Extensions.Hosting` and many other NuGet packages needed for the Generic Host in .NET.
 
 ### Step 4
 
