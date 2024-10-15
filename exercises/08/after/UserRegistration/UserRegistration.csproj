@@ -11,6 +11,5 @@
         <ProjectReference Include="..\..\..\shared\Shared\Shared.csproj" />
         <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj"/>
         <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
-        <Reference Include="System.ServiceProcess"/>
     </ItemGroup>
 </Project>

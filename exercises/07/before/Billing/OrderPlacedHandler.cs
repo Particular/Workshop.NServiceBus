@@ -13,7 +13,7 @@
 
         public async Task Handle(OrderPlaced message, IMessageHandlerContext context)
         {
-            await Task.Delay(1000);
+            await Task.Delay(1000, context.CancellationToken);
 
             log.Info($"Billing has received OrderPlaced, OrderId = {message.OrderId}");
         }
