@@ -38,7 +38,7 @@ dotnet new install ParticularTemplates::5.*
 ```
 The following command will create a new C# project. The `--framework` option was 
 ```
-dotnet new nsbendpoint --name MyEndpoint --hosting WindowsService --transport LearningTransport --persistence LearningPersistence --framework net6.0
+dotnet new nsbendpoint --name MyEndpoint --hosting WindowsService --transport LearningTransport --persistence LearningPersistence --framework net8.0
 ```
 
 Now execute the following commands to change the folder to the project and then add a handler:
