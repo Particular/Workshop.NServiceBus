@@ -17,7 +17,7 @@ If you have any difficulty preparing your machine, or following this document, p
 
 ### Install the pre-requisites
 
-To complete the exercises, you require a Windows machine and Visual Studio.
+To complete the exercises, you require a Windows machine and Visual Studio/Rider.
 
 #### Visual Studio
 
@@ -28,9 +28,9 @@ Install JetBrains Rider 2021.3 or later, or [Visual Studio 2022](https://www.vis
 
 The following frameworks need to be installed:
 
-- .NET 6
+- .NET 8
 
-#### Particular Software Platform
+#### Particular Service Platform
 
 The Particular Service Platform includes ServiceControl, ServicePulse and ServiceInsight.
 The samples include a platform connection package that will fire up both ServiceControl and ServicePulse, without requiring any installation.
