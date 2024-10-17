@@ -28,15 +28,15 @@
 
             // Publish fact that we've started, so anyone interested can have the data available.
             var @event = Mapper.Map<UserVerificationStarted>(message);
-            await context.Publish(@event).ConfigureAwait(false);
+            await context.Publish(@event);
 
             // Send command to send an email
             var command = new SendVerificationEmail(message.UserId, message.Name, message.EmailAddress,
                 Data.VerificationCode);
-            await context.Send(command).ConfigureAwait(false);
+            await context.Send(command);
 
             // Create timeout to make user aware to _really_ click that link.
-            await RequestTimeout<EmailReminderTimeout>(context, TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            await RequestTimeout<EmailReminderTimeout>(context, TimeSpan.FromSeconds(5));
         }
 
         public async Task Handle(UserVerifyingEmail message, IMessageHandlerContext context)
@@ -61,10 +61,10 @@
         public async Task Timeout(EmailReminderTimeout state, IMessageHandlerContext context)
         {
             var command = new SendVerificationReminderEmail(Data.UserIdentifier, Data.VerificationCode);
-            await context.Send(command).ConfigureAwait(false);
+            await context.Send(command);
 
             await RequestTimeout<UserEmailVerificationExpiredTimeout>(context, TimeSpan.FromSeconds(5))
-                .ConfigureAwait(false);
+                ;
         }
 
         public Task Timeout(UserEmailVerificationExpiredTimeout state, IMessageHandlerContext context)

@@ -27,7 +27,7 @@ namespace ClientUI
 
             await RunLoop();
 
-            await endpointInstance.Stop().ConfigureAwait(false);
+            await endpointInstance.Stop();
         }
 
         private static async Task RunLoop()

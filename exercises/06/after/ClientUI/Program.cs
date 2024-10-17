@@ -31,13 +31,13 @@
             endpointConfiguration.AddDeserializer<XmlSerializer>();
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
-                                                 .ConfigureAwait(false);
+                                                 ;
 
             await RunLoop(endpointInstance)
-                .ConfigureAwait(false);
+                ;
 
             await endpointInstance.Stop()
-                                  .ConfigureAwait(false);
+                                  ;
         }
 
         private static async Task RunLoop(IEndpointInstance endpointInstance)
@@ -60,7 +60,7 @@
                         // Send the command
                         log.Info($"Sending PlaceOrder command, OrderId = {command.OrderId}");
                         await endpointInstance.Send(command)
-                                              .ConfigureAwait(false);
+                                              ;
 
                         break;
 

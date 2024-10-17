@@ -19,11 +19,11 @@
 
             endpointConfiguration.Configure(routing => routing.RouteToEndpoint(typeof(PlaceOrder), "Sales"));
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration);
 
-            await RunLoop(endpointInstance).ConfigureAwait(false);
+            await RunLoop(endpointInstance);
 
-            await endpointInstance.Stop().ConfigureAwait(false);
+            await endpointInstance.Stop();
         }
 
         private static async Task RunLoop(IEndpointInstance endpointInstance)
@@ -45,7 +45,7 @@
 
                         // Send the command to the local endpoint
                         log.Info($"Sending PlaceOrder command, OrderId = {command.OrderId}");
-                        await endpointInstance.Send(command).ConfigureAwait(false);
+                        await endpointInstance.Send(command);
 
                         break;
 
