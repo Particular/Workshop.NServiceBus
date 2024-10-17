@@ -1,18 +1,17 @@
-namespace Sales
+namespace Sales;
+
+using Messages;
+using NServiceBus;
+using NServiceBus.Logging;
+using System.Threading.Tasks;
+
+public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
 {
-    using Messages;
-    using NServiceBus;
-    using NServiceBus.Logging;
-    using System.Threading.Tasks;
+    static readonly ILog log = LogManager.GetLogger<PlaceOrderHandler>();
 
-    public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
+    public Task Handle(PlaceOrder message, IMessageHandlerContext context)
     {
-        private static readonly ILog log = LogManager.GetLogger<PlaceOrderHandler>();
-
-        public Task Handle(PlaceOrder message, IMessageHandlerContext context)
-        {
-            log.Info($"Received PlaceOrder, OrderId = {message.OrderId}");
-            return Task.CompletedTask;
-        }
+        log.Info($"Received PlaceOrder, OrderId = {message.OrderId}");
+        return Task.CompletedTask;
     }
 }

@@ -1,26 +1,16 @@
-﻿namespace Sales
-{
-    using NServiceBus;
-    using System;
-    using System.Threading.Tasks;
-    using Shared.Configuration;
+﻿using NServiceBus;
+using System;
+using Shared.Configuration;
 
-    internal class Program
-    {
-        private static async Task Main()
-        {
-            Console.Title = "Sales";
+Console.Title = "Sales";
 
-            var endpointConfiguration = new EndpointConfiguration("Sales");
+var endpointConfiguration = new EndpointConfiguration("Sales");
 
-            endpointConfiguration.Configure();
+endpointConfiguration.Configure();
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration);
+var endpointInstance = await Endpoint.Start(endpointConfiguration);
 
-            Console.WriteLine("Press Enter to exit.");
-            Console.ReadLine();
+Console.WriteLine("Press Enter to exit.");
+Console.ReadLine();
 
-            await endpointInstance.Stop();
-        }
-    }
-}
+await endpointInstance.Stop();

@@ -29,6 +29,7 @@ Install JetBrains Rider 2021.3 or later, or [Visual Studio 2022](https://www.vis
 The following frameworks need to be installed:
 
 - .NET 8
+- Docker
 
 #### Particular Service Platform
 
