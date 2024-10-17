@@ -83,7 +83,7 @@ internal class ProgramService : ServiceBase
             endpointConfiguration.EnableInstallers();
 
             endpoint = await Endpoint.Start(endpointConfiguration)
-                                     .ConfigureAwait(false);
+                                     ;
             PerformStartupOperations();
         }
         catch (Exception exception)

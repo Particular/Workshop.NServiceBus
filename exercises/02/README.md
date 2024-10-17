@@ -6,6 +6,6 @@ What changed?
 
 - Created a new endpoint, Sales
 - Started the Sales endpoint
-- Moved the handler to the Sales endpoint
+- Move the handler to the Sales endpoint
 - Send to the new Sales endpoint
 - Set multiple startup projects

@@ -41,11 +41,11 @@
             var routing = transport.Routing();
             routing.RouteToEndpoint(typeof(RegisterNewUser).Assembly, "UserRegistration");
 
-            endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
+            endpointInstance = await Endpoint.Start(endpointConfiguration);
 
             await RunLoop();
 
-            await endpointInstance.Stop().ConfigureAwait(false);
+            await endpointInstance.Stop();
         }
 
         private static async Task RunLoop()

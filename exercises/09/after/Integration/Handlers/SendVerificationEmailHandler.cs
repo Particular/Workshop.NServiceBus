@@ -24,7 +24,7 @@
             };
 
             await context.Publish(@event)
-                         .ConfigureAwait(false);
+                         ;
 
             if (random.Next(0, 4) == 0) throw new InvalidOperationException("Random failure!");
         }
