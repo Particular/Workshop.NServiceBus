@@ -28,7 +28,7 @@ Install JetBrains Rider 2021.3 or later, or [Visual Studio 2022](https://www.vis
 
 The following frameworks need to be installed:
 
-- .NET 6
+- .NET 8
 
 #### Particular Software Platform
 
