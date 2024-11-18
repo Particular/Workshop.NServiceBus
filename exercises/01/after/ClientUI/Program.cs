@@ -1,51 +1,21 @@
-﻿using Messages;
+﻿using System;
+using ClientUI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NServiceBus;
-using System;
-using System.Threading.Tasks;
-using Shared.Configuration;
 
 Console.Title = "ClientUI";
 
+var builder = Host.CreateApplicationBuilder(args);
+
 var endpointConfiguration = new EndpointConfiguration("ClientUI");
 
-endpointConfiguration.Configure();
+endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
-var endpointInstance = await Endpoint.Start(endpointConfiguration);
+endpointConfiguration.UseTransport(new LearningTransport());
 
-await RunLoop(endpointInstance);
+builder.UseNServiceBus(endpointConfiguration);
 
-await endpointInstance.Stop();
+builder.Services.AddHostedService<InputLoopService>();
 
-
-static async Task RunLoop(IEndpointInstance endpointInstance)
-{
-    while (true)
-    {
-        Console.WriteLine("Press 'P' to place an order, or 'Q' to quit.");
-        var key = Console.ReadKey();
-        Console.WriteLine();
-
-        switch (key.Key)
-        {
-            case ConsoleKey.P:
-                // Instantiate the command
-                var command = new PlaceOrder
-                {
-                    OrderId = Guid.NewGuid().ToString()
-                };
-
-                // Send the command to the local endpoint
-                Console.WriteLine($"Sending PlaceOrder command, OrderId = {command.OrderId}");
-                await endpointInstance.SendLocal(command);
-
-                break;
-
-            case ConsoleKey.Q:
-                return;
-
-            default:
-                Console.WriteLine("Unknown input. Please try again.");
-                break;
-        }
-    }
-}
+await builder.Build().RunAsync();

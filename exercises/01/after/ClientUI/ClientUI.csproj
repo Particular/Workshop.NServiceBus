@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <OutputType>Exe</OutputType>
-    </PropertyGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\shared\Shared\Shared.csproj" />
-      <ProjectReference Include="..\Messages\Messages.csproj" />
-    </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <LangVersion>12.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NServiceBus" Version="9.*" />
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages\Messages.csproj" />
+  </ItemGroup>
 </Project>
