@@ -9,4 +9,4 @@ What changed?
 - Modify the PlaceOrderHandler to publish an event
 - Subscribe to the event from Billing
 - Publish an event when the order is billed
-- Subscribe to the OrderPlaced and OrderBilled event in Shipping
+- Subscribe to the OrderPlaced and OrderBilled events in Shipping

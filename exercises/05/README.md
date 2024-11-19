@@ -1,14 +1,12 @@
 # Exercise 5: Message serialization, wire compatibility, and type resolution
 
-Important: Before attempting the exercise, please ensure you have followed the instructions for preparing your machine and that you have read the instructions for running the exercise solutions.
-
 ## Overview
 
 In this exercise, you will learn:
 
-- how to configure a serializer
-- how to configure multiple serializers to support receives in multiple wire formats
 - how to use messages types that do not use the NServiceBus marker interfaces.
+- how to configure a serializer
+- how to configure multiple de-serializers to support receives in multiple wire formats
 
 ## Exercise 5.1:  Naming conventions
 
@@ -26,7 +24,7 @@ Start all projects, select the `ClientUI` process and send an order. Notice that
 
 Inspect the message types `OrderBilled` and `OrderPlaced`. Notice that the OrderBilled event type inherits from marker interface `IEvent` and OrderPlaced does not.
 
-###  Step 4
+### Step 4
 
 Compare the configurations of `Billing` and `Shipping`. Notice that `Billing` has a naming convention defined and `Shipping` does not.
 
@@ -42,7 +40,6 @@ Stop all processes and delete the `.learningtransport` folder, restart all endpo
 
 Make sure the naming convention for events on the `Shipping` endpoint follows the naming convention for the `OrderPlaced`-event and use the marker interface for the `OrderBilled` event.
 
-
 ## Exercise 5.2: Support multiple wire formats
 
 A system may have to deal with multiple wire formats. This may be required when evolving legacy systems or to connect multiple sub-systes.
@@ -53,7 +50,6 @@ The following documentation can be used to help implement the solution.
 - https://docs.particular.net/nservicebus/serialization/xml
 - https://docs.particular.net/nservicebus/serialization/json
 - https://docs.particular.net/nservicebus/serialization/newtonsoft
-
 
 ### Step 1
 

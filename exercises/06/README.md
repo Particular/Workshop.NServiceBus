@@ -336,8 +336,6 @@ Rename the endpoints according to the endpoint they are in. As otherwise all end
 var endpointName = "Shipping";
 ```
 
-
-
 ## Exercise 6.6: Hosting in Docker containers
 
 NServiceBus endpoints can be hosted in Docker containers.
