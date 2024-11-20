@@ -10,35 +10,9 @@ In this exercise, you will learn:
 
 ## Exercise 5.1:  Naming conventions
 
-The `Billing` and `Shipping` endpoints need to be subscribed to the `OrderPlaced`-event published by `Sales`.
+Change all `.Messages` project to no longer reference NServiceBus using https://docs.particular.net/nservicebus/messaging/unobtrusive-mode as guidance.
 
-Useful documentation:
-
-https://docs.particular.net/nservicebus/messaging/unobtrusive-mode
-
-### Step 1
-
-Start all projects, select the `ClientUI` process and send an order. Notice that the `Shipping` endpoint receives the `OrderBilled`-event but not the `OrderPlaced`-event. 
-
-### Step 2
-
-Inspect the message types `OrderBilled` and `OrderPlaced`. Notice that the OrderBilled event type inherits from marker interface `IEvent` and OrderPlaced does not.
-
-### Step 4
-
-Compare the configurations of `Billing` and `Shipping`. Notice that `Billing` has a naming convention defined and `Shipping` does not.
-
-### Step 5
-
-Fix the configuration of `Shipping` so that it will successfully subscribe to the `OrderPlaced` event from `Sales`.
-
-### Step 6
-
-Stop all processes and delete the `.learningtransport` folder, restart all endpoints. Validate if `Shipping` now receives both `OrderBilled` and `OrderPlaced`-events.
-
-### Step 7
-
-Make sure the naming convention for events on the `Shipping` endpoint follows the naming convention for the `OrderPlaced`-event and use the marker interface for the `OrderBilled` event.
+NOTE: Alternatively you can also use the `NServiceBus.MessageInterfaces` as described in https://docs.particular.net/samples/message-assembly-sharing/
 
 ## Exercise 5.2: Support multiple wire formats
 
