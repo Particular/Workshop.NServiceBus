@@ -117,3 +117,14 @@ Make sure the class inherits from the correct base class as can be found in the 
 ### Step 3
 
 Run the endpoints and open *ServicePulse*. Verify how the custom check is reporting its status on the custom check view.
+
+
+## Exercise 9.4
+
+### Step 1
+
+Setup *ServiceInsight* as instructed on the [Readme of the repo](https://github.com/Particular/Workshop.NServiceBus).
+
+### Step 2
+
+Go to the saga view and check the state of some of the active sagas.
