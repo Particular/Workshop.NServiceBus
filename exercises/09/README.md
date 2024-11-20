@@ -21,36 +21,32 @@ Setup *ServiceInsight* as instructed on the [Readme of the repo](https://github.
 
 #### Platform
 
-Start the platform either using SQL Server or RabbitMQ by executing `docker compose up -d` in `/docker/platform-sql` or `/docker/platform-rabbitmq`
+1. Make sure that you delete the containers from exercise 6
+1. Start the platform either using SQL Server or RabbitMQ by executing `docker compose up -d` in `/docker/platform-rabbitmq` (or `/docker/platform-sql` if you want to use SQL server)
 
 This will allow you to access ServicePulse on http://localhost:9090
 
 ### Step 2
 
-Connect all endpoints to the platform as described in https://docs.particular.net/samples/platform-connector/code-first/
-
+Change the shared configuration to connect all endpoints to the platform as described in https://docs.particular.net/samples/platform-connector/code-first/
 
 ### Step 3
 
-Experiment with adding load
-
+Experiment with adding load via the `ClientUI` and delays in the handlers to see how the metrics change.
 
 ## Exercise 9.2
 
-NOTE: This exercise assumes that ServiceInsight is installed. See the [prerequisites](../../README.md#preparing-your-machine-for-the-workshop) for details.
-
 ### Step 1
 
-Launch *ServiceInsight*.
+Turn off [the immediate](https://docs.particular.net/nservicebus/recoverability/configure-immediate-retries#disabling) and [delayed retries](https://docs.particular.net/nservicebus/recoverability/configure-delayed-retries#disabling-through-code) by modifying the shared code
 
 ### Step 2
 
-In the search box, enter message name *SendVerificationReminderEmail*.
+Simulate failures by throwing errors in your message handlers.
 
 ### Step 3
 
-Select any of the returned messages and see how it affects the latency of the endpoint.
-
+Retry failed messages via ServicePulse
 
 ## Exercise 9.3
 
@@ -62,15 +58,7 @@ https://docs.particular.net/monitoring/custom-checks/
 
 ### Step 1
 
-Open project *Integration*.
-
-### Step 2
-
-Add the Nuget package `NServiceBus.CustomChecks` version **2.x.x**.
-
-### Step 3
-
-Add the following custom check code the project:
+Add the following custom check code the Billing project:
 
 ```c#
 using System;
@@ -122,44 +110,10 @@ class ThirdPartyMonitor
 }
 ```
 
-### Step 4
+### Step 2
 
 Make sure the class inherits from the correct base class as can be found in the [custom check documentation](https://docs.particular.net/monitoring/custom-checks/writing-custom-checks).
 
-### Step 5
-
-Run the endpoints and open *ServicePulse*. Verify how the custom check is reporting its status on the custom check view.
-
-
-## Exercise 9.4
-
-Documentation:
-
-https://docs.particular.net/monitoring/heartbeats/
-
-### Step 1
-
-Add the package `NServiceBus.Heartbeats` version **2.x.x* to all endpoints.
-
-### Step 2
-
-Extend the endpoint configuration with the following heartbeat configuration:
-
-```c#
-endpointConfiguration.SendHeartbeatTo(
-    serviceControlQueue: "particular.servicecontrol",
-    frequency: TimeSpan.FromSeconds(60),
-    timeToLive: TimeSpan.FromSeconds(30));
-```
-
 ### Step 3
 
-Verify if heartbeats are being sent to ServiceControl by opening ServicePulse and checking whether the endpoints are listed on the Heartbeats screen.
-
-### Step 4
-
-The heartbeat frequency is set to a high value which makes the endpoint appear in a faulted state. Increase the *heartbeat graceperiod* to 2 minutes based on the following documentation:
-
-https://docs.particular.net/servicecontrol/creating-config-file#plugin-specific-servicecontrolheartbeatgraceperiod
-
-NOTE: We increased the graceperiod to 2 minutes because we want the endpoint to rely on the hosting environment for recovery. If a Windows Service crashes, Windows will by default restart the process after 1 minute. We only want an operator to analyze the issue when the service is unable to restart. By setting the graceperiod to 2 minutes, we're ignoring any service restarts from showing up as missing heartbeats.
+Run the endpoints and open *ServicePulse*. Verify how the custom check is reporting its status on the custom check view.
