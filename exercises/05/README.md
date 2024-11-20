@@ -57,7 +57,7 @@ Run the current solution and verify that the `Billing` endpoint is correctly sub
 
 ### Step 2
 
-Modify the configuration for the `Billing` endpoint. Configure the endpoint to use the JSON serializer.
+Modify the configuration for the `Billing` endpoint. Configure the endpoint to use the XML serializer.
 
 ### Step 3
 
@@ -65,15 +65,11 @@ Run the endpoints and send a few orders via `ClientUI`. Notice that `Billing` no
 
 ### Step 4
 
-Configure `Billing` to include support for the previous XML Serializer to deserialize messages.
+Configure `Billing` to include support for the previous JSON Serializer to deserialize messages.
 
 ### Step 5
 
 Run all endpoints and validate if `Billing` now correctly processes messages. Notice that `Billing` now correctly processes messages from `Sales`, but that `Shipping` does not correctly process messages from Billing.
-
-### Step 5
-
-Upgrade all endpoints to now use JSON as the default message format but make sure that they still support XML for old messages.
 
 ### Step 6
 

@@ -50,6 +50,10 @@ Clone or download this repo. If you're downloading a zip copy of the repo, ensur
 
 ## Troubleshooting
 
+### No valid license
+
+Install the license in `/exercises/License.xml` as an [environment variable](https://docs.particular.net/nservicebus/licensing/#license-management-environment-variable).
+
 ### Access denied exception with learning transport
 
 If you are getting access denied exceptions on the file system while running the exercises the cause is likely virusscanners, backup or file synchronisation software like dropbox or onedrive opening these files. Exclude the `.learningtransport` folder or temporarily disable these tools.

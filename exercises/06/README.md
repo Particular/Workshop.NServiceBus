@@ -1,5 +1,4 @@
-
-# Exercise 6: Hosting
+# Exercise 6: Hosting in docker
 
 Important: Before attempting the exercise, please ensure you have followed the instructions for preparing your machine and that you have read the instructions for running the exercise solutions.
 

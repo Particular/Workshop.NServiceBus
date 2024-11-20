@@ -6,8 +6,6 @@ Our endpoints are now production ready, but we're still missing monitoring.
 
 In this exercise you'll learn how to:
 
-- Setup a *ServiceControl* instance
-- Setup a *ServiceControl Monitoring* instance
 - Configure an endpoint to use Platform Monitoring
 - Setup a custom check
 - Setup heartbeats
@@ -19,45 +17,23 @@ We need to install some components and configure these to use a transport.
 
 ### Step 1
 
+##### ServiceInsight
+
 Setup *ServiceInsight* as instructed on the [Readme of the repo](https://github.com/Particular/Workshop.NServiceBus).
 
-To set up the Platform tools from scratch without the Platform connection package, follow the documentation:
+#### Platform
 
-- https://docs.particular.net/tutorials/monitoring-setup/
+Start the platform either using SQL Server or RabbitMQ by executing `docker compose up -d` in `/docker/platform-sql` or `/docker/platform-rabbitmq`
+
+This will allow you to access ServicePulse on http://localhost:9090
 
 ### Step 2
 
-Enable auditing for the endpoints of the exercise by adding the following to the `endpointConfiguration`:
-
-```c#
-endpointConfiguration.AuditProcessedMessagesTo("audit");
-```
+Connect all endpoints to the platform as described in https://docs.particular.net/samples/platform-connector/code-first/
 
 ### Step 3
 
-Add and enable the NServiceBus monitoring plugin as instructed in the tutorial:
-
-https://docs.particular.net/tutorials/monitoring-setup/#configure-nservicebus-endpoints-monitoring
-
-### Step 4
-
-The reporting interval is currently set to 2 seconds. Set this to 0.5 seconds for testing and demo purposes.
-
-### Step 5
-
-Look at the dashboard and identify which endpoint, and more specifically which message type, has performance issues.
-
-### Step 6
-
-Write down 4 ways to increase the throughput besides optimizing the handler in `notes.txt`.
-
-### Step 4
-
-Increase the maximum concurrency of the processing endpoint to 10.
-
-### Step 5
-
-Verify that *Critical time* of the endpoint is actually decreasing.
+Experiment with adding load
 
 
 ## Exercise 9.2
