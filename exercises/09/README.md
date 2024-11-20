@@ -13,8 +13,6 @@ In this exercise you'll learn how to:
 
 ## Exercise 9.1
 
-We need to install some components and configure these to use a transport.
-
 ### Step 1
 
 ##### ServiceInsight
@@ -30,6 +28,7 @@ This will allow you to access ServicePulse on http://localhost:9090
 ### Step 2
 
 Connect all endpoints to the platform as described in https://docs.particular.net/samples/platform-connector/code-first/
+
 
 ### Step 3
 

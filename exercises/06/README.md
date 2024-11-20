@@ -59,11 +59,11 @@ Execute the following command in the same folder as `RetailDemo.sln`
 
 `dotnet publish RetailDemo.sln /p:Configuration=Debug /p:Platform="Any CPU" --os linux --arch x64 /t:PublishContainer`
 
-once done our endpoints are now built pushed to the local docker registry and ready to be used.
+once done our endpoints are now built and pushed to the local docker registry ready to be used.
 
 ## Step 7
 
-Looking at the docker-compose.yml file you can see how we define the 3 endpoints, a RabbitMQ broker and wired the endpoints up to wait for the broker to become available before staring.
+Looking at the docker-compose.yml file you can see how we define the 3 endpoints, a RabbitMQ broker and wired the endpoints up to wait for the broker to become available before starting.
 
 To start running use the following command:
 
@@ -73,14 +73,13 @@ You should now see the containers starting up.
 
 ## Step 8
 
-Start the ClientUI in debug mode to send a few orders into the system.
+Start the ClientUI in debug mode from VisualStudio/Rider and send a few orders into the system.
 
-Use the following commands to see what Sales, Billing and Shipping is doing.
+Use the following commands to see what Sales, Billing and Shipping are doing.
 
 `docker compose logs sales`
 `docker compose logs billing`
 `docker compose logs shipping`
-
 
 ## FAQ
 
