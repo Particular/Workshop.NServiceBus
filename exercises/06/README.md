@@ -84,4 +84,10 @@ Use the following commands to see what Sales, Billing and Shipping is doing.
 
 ## FAQ
 
+### Removing containers
+
 Use: `docker compose rm -sf` to stop and remove all images to start fresh. 
+
+### License issues
+
+Should you get a license warning include `exercises/License.xml` in the output of the endpoints.
