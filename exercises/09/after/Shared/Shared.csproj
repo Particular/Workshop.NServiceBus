@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="NServiceBus" Version="9.*"/>
+        <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.*"/>
+        <PackageReference Include="NServiceBus.RabbitMQ" Version="9.*"/>
+        <PackageReference Include="NServiceBus.ServicePlatform.Connector" Version="3.*" />
+        <PackageReference Include="NServiceBus.SagaAudit" Version="5.*" />
+    </ItemGroup>
+    
+</Project>

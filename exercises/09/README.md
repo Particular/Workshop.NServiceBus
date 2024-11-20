@@ -13,28 +13,46 @@ In this exercise you'll learn how to:
 
 ## Exercise 9.1
 
+Refactor all endpoints to use to a shared configuration class by:
+
+1. Add a new `Shared` project
+1. Add references
+    <PackageReference Include="NServiceBus" Version="9.*"/>
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.*"/>
+    <PackageReference Include="NServiceBus.RabbitMQ" Version="9.*"/>
+    <PackageReference Include="NServiceBus.ServicePlatform.Connector" Version="3.*" />
+    <PackageReference Include="NServiceBus.SagaAudit" Version="5.*" />
+1. Add the `exercises/09/after/Shared/SharedConventions.cs` to the project
+1. Add a reference to the shared project to ClientUI, Sales, Billing and Shipping
+1. Update all endpoints configure the endpoint using `builder.ConfigureWorkshopEndpoint(endpointName, "host=localhost");`
+  - NOTE: Routing needs to be configured for the `ClientUI` using `builder.ConfigureWorkshopEndpoint(endpointName, "host=localhost", c => c.Routing.RouteToEndpoint(typeof(PlaceOrder), "Sales"));`
+
+## Exercise 9.2
+
+Start the platform
+
 ### Step 1
 
-##### ServiceInsight
-
-Setup *ServiceInsight* as instructed on the [Readme of the repo](https://github.com/Particular/Workshop.NServiceBus).
-
-#### Platform
-
 1. Make sure that you delete the containers from exercise 6
-1. Start the platform either using SQL Server or RabbitMQ by executing `docker compose up -d` in `/docker/platform-rabbitmq` (or `/docker/platform-sql` if you want to use SQL server)
-
-This will allow you to access ServicePulse on http://localhost:9090
 
 ### Step 2
 
-Change the shared configuration to connect all endpoints to the platform as described in https://docs.particular.net/samples/platform-connector/code-first/
+Start the platform either using SQL Server or RabbitMQ by executing `docker compose up -d` in `/docker/platform-rabbitmq` (or `/docker/platform-sql` if you want to use SQL server)
 
 ### Step 3
 
-Experiment with adding load via the `ClientUI` and delays in the handlers to see how the metrics change.
+Access ServicePulse on http://localhost:9090
 
-## Exercise 9.2
+### Step 4 
+
+1. Start the endpoints
+1. Note that all endpoints show up as running
+
+### Step 5
+
+Experiment with adding load via the `ClientUI` and delays in the handlers to see how the graphs on the Monitoring tab changes.
+
+## Exercise 9.3
 
 ### Step 1
 
@@ -48,7 +66,7 @@ Simulate failures by throwing errors in your message handlers.
 
 Retry failed messages via ServicePulse
 
-## Exercise 9.3
+## Exercise 9.4
 
 There is a critical external API. The system doesn't process many messages for it but we want the system to be proactively reporting this API is down.
 
