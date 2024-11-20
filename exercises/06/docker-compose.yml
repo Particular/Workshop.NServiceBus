@@ -1,0 +1,28 @@
+name: excercise-6
+services:
+    sales:
+        image: sales
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+    billing:
+        image: billing
+        depends_on:
+            rabbitmq:
+                condition: service_healthy    
+                
+    shipping:
+        image: shipping
+        depends_on:
+            rabbitmq:
+                condition: service_healthy                
+    rabbitmq:
+        image: "rabbitmq:3.12-management"
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        healthcheck:
+            test: rabbitmq-diagnostics -q ping
+            interval: 30s
+            timeout: 30s
+            retries: 3
