@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<license type="Non-Production Development" Applications="All" expiration="2024-09-17" id="b826f0bb-0db4-46a7-b65d-f8693308f343">
-  <name>dennis.vanderstelt@particular.net</name>
+<license type="Non-Production Development" Applications="All" expiration="2025-02-18" id="381e818f-a9be-4a2f-a3e6-de2b600052eb">
+  <name>nservicebus.workshop@particular.net</name>
   <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
     <SignedInfo>
       <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
@@ -10,9 +10,9 @@
           <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
         </Transforms>
         <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <DigestValue>V+MAiK2zaYYzExL4raACaNmWAvI=</DigestValue>
+        <DigestValue>nktkCdhTa5GnMEqhqaqb8Ir6Mz8=</DigestValue>
       </Reference>
     </SignedInfo>
-    <SignatureValue>qtyCeL6KyjuxDA31MkkQtCYCP+b4xP5a9DHZfTLy7En/N/SPcu5a535JTcj2HR9an2KBfW0rNdexZ7HB9Pl/N+nabnUB0HxDIDYeYkSxHqkoCK/qNkdkJbd/AXkA+4JlBT8NWjBDZhJuYfeJmI+iMTcxVR5PhD+XDzCundFPieI=</SignatureValue>
+    <SignatureValue>hPQN2/hKrY8v6z1e4p5GjXZBxsvKJQKR9OLqkAljXO8NqyWZQA21gTmDYcb6NPwM1rJhK+a8fQto3RLbJ57IZpHTQYEmhNIIaZa0cjSH24NsGMxurjPlk3ttTytoIxgTkfXv3cyI+qWS0QIyPnvCCRx4PSqNV3AhU/lPe8aonCs=</SignatureValue>
   </Signature>
 </license>

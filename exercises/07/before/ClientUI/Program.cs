@@ -23,11 +23,11 @@ namespace ClientUI
                 s.RouteToEndpoint(typeof(PlaceOrder), "Sales");
             });
 
-            var endpointInstance = await Endpoint.Start(endpointConfiguration).ConfigureAwait(false);
+            var endpointInstance = await Endpoint.Start(endpointConfiguration);
 
             await RunLoop(endpointInstance);
 
-            await endpointInstance.Stop().ConfigureAwait(false);
+            await endpointInstance.Stop();
         }
 
         private static async Task RunLoop(IEndpointInstance endpointInstance)

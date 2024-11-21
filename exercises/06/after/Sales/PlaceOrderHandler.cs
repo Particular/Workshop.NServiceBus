@@ -1,33 +1,33 @@
-#pragma warning disable 162
+﻿using System.Threading.Tasks;
+using Messages;
+using NServiceBus;
+using System;
+using Microsoft.Extensions.Logging;
 
-namespace Sales
+namespace Sales;
+
+public class PlaceOrderHandler(ILogger<PlaceOrderHandler> logger) :
+    IHandleMessages<PlaceOrder>
 {
-    using Messages;
-    using Messages.Events;
-    using NServiceBus;
-    using NServiceBus.Logging;
-    using System.Threading.Tasks;
-
-    public class PlaceOrderHandler : IHandleMessages<PlaceOrder>
+    public Task Handle(PlaceOrder message, IMessageHandlerContext context)
     {
-        private static readonly ILog log = LogManager.GetLogger<PlaceOrderHandler>();
+        logger.LogInformation("Received PlaceOrder, OrderId = {orderId}", message.OrderId);
 
-        public Task Handle(PlaceOrder message, IMessageHandlerContext context)
+        // This is normally where some business logic would occur
+
+        // Uncomment to test throwing a systemic exception
+        //throw new Exception("BOOM");
+
+        //Uncomment to test throwing a transient exception
+//        if (Random.Shared.Next(0, 5) == 0)
+//        {
+//            throw new Exception("Oops");
+//        }
+
+        var orderPlaced = new OrderPlaced
         {
-            log.Info($"Received PlaceOrder, OrderId = {message.OrderId}");
-
-            // This is normally where some business logic would occur
-
-            // Uncomment to test throwing a systemic exception
-            //throw new Exception("BOOM");
-
-            var orderPlaced = new OrderPlaced
-            {
-                OrderId = message.OrderId
-            };
-            return context.Publish(orderPlaced);
-        }
+            OrderId = message.OrderId
+        };
+        return context.Publish(orderPlaced);
     }
 }
-
-#pragma warning restore 162

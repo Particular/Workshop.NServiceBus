@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <OutputType>Exe</OutputType>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="NServiceBus" Version="9.2.2" />
-        <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Net.Build.Containers" Version="8.*" />
-        <ProjectReference Include="..\Messages\Messages.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="..\..\License.xml" CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <LangVersion>12.0</LangVersion>
+    <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NServiceBus" Version="9.*" />
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.*" />
+    <PackageReference Include="NServiceBus.RabbitMQ" Version="9.1.1" />
+    <ProjectReference Include="..\Billing.Messages\Billing.Messages.csproj" />
+    <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj" />
+  </ItemGroup>
 </Project>

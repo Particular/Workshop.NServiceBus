@@ -13,13 +13,12 @@ If you have any difficulty preparing your machine, or following this document, p
 
 - [Install the pre-requisites](#install-the-pre-requisites)
 - [Get a copy of this repository](#get-a-copy-of-this-repository)
-- [Build the exercise solutions](#build-the-exercise-solutions)
 
 ### Install the pre-requisites
 
-To complete the exercises, you require a Windows machine and Visual Studio.
+To complete the exercises, you require a Windows machine and Visual Studio/Rider.
 
-#### Visual Studio
+#### Visual Studio / Rider
 
 Install JetBrains Rider 2021.3 or later, or [Visual Studio 2022](https://www.visualstudio.com) or later (Community, Professional, or Enterprise) with the following workloads:
 
@@ -29,10 +28,12 @@ Install JetBrains Rider 2021.3 or later, or [Visual Studio 2022](https://www.vis
 The following frameworks need to be installed:
 
 - .NET 8
+- Docker
 
-#### Particular Software Platform
+#### ServiceInsight
 
 The Particular Service Platform includes ServiceControl, ServicePulse and ServiceInsight.
+
 The samples include a platform connection package that will fire up both ServiceControl and ServicePulse, without requiring any installation.
 
 In order to try out ServiceInsight, an installation is required. The latest version can be downloaded [from GitHub](https://github.com/Particular/ServiceInsight/releases/latest). Once installed, ServiceInsight needs to be connected to ServiceControl. 
@@ -47,25 +48,11 @@ Clone or download this repo. If you're downloading a zip copy of the repo, ensur
 * On the "General" properties page, check the "Unblock" checkbox
 * Click "OK"
 
-### Build the exercise solutions
-
-The exercises are contained in Visual Studio solutions under [exercises](exercises). All the solutions require NuGet package restore. This may be possible at the workshop venue (you can verify with the workshop organizers if internet access is available at the venue) but to ensure you can build the solutions during the workshop, we recommend you restore all NuGet packages and build all the solutions before the workshop starts. The simplest way to do this is to open a command prompt, navigate to your copy of this repo, and run `.\build.cmd exercises`. (For a full list of build targets, run `.\build.cmd -T`, or `.\build.cmd -h` for help.) You can safely ignore any compiler warnings.
-
-## Running the exercise solutions
-
-Before opening any exercise solutions, set the startup projects by navigating to your copy of this repo and running `set-startup-projects.cmd`. Note that if you `git clean` your clone, you will have to run this command again.
-
-The startup projects are also listed in the instructions for each exercise. If you need to, you can configure them manually:
-
-  - In Visual Studio, right click the solution in the Solution Explorer
-  - Click "Properties"
-  - Ensure that, in the left hand pane, "Common Properties", "Start Project" is selected.
-  - Select the "Multiple startup projects" radio button
-  - Set the "Action" for each project listed in the instructions for the exercise to "Start".
-
-To run an exercise solution, simply press <kbd>F5</kbd> in Visual Studio. The exercise solution will now be running and fully functional.
-
 ## Troubleshooting
+
+### No valid license
+
+Install the license in `/exercises/License.xml` as an [environment variable](https://docs.particular.net/nservicebus/licensing/#license-management-environment-variable).
 
 ### Access denied exception with learning transport
 

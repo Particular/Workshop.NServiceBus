@@ -1,8 +1,0 @@
-﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Everything" type="CompoundRunConfigurationType">
-    <toRun name="ClientUI" type="DotNetProject" />
-    <toRun name="Integration" type="DotNetProject" />
-    <toRun name="UserRegistration" type="DotNetProject" />
-    <method v="2" />
-  </configuration>
-</component>

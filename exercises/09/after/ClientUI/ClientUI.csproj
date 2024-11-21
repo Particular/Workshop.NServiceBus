@@ -1,17 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <OutputType>Exe</OutputType>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="NServiceBus" Version="7.6.0"/>
-        <PackageReference Include="NServiceBus.CustomChecks" Version="3.0.1"/>
-        <PackageReference Include="NServiceBus.Heartbeat" Version="3.0.1"/>
-        <PackageReference Include="NServiceBus.Metrics.ServiceControl" Version="3.0.6"/>
-        <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.3.0"/>
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Integration.Messages\Integration.Messages.csproj"/>
-        <ProjectReference Include="..\UserRegistration.Messages\UserRegistration.Messages.csproj"/>
-    </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NServiceBus" Version="9.*" />
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
 </Project>

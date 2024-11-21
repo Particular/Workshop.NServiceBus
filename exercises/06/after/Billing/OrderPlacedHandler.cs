@@ -1,24 +1,21 @@
-﻿namespace Billing
+﻿using System.Threading.Tasks;
+using Messages;
+using Microsoft.Extensions.Logging;
+using NServiceBus;
+
+namespace Billing;
+
+public class OrderPlacedHandler(ILogger<OrderPlacedHandler> logger) :
+    IHandleMessages<OrderPlaced>
 {
-    using Messages;
-    using Messages.Events;
-    using NServiceBus;
-    using NServiceBus.Logging;
-    using System.Threading.Tasks;
-
-    public class OrderPlacedHandler : IHandleMessages<OrderPlaced>
+    public Task Handle(OrderPlaced message, IMessageHandlerContext context)
     {
-        private static readonly ILog log = LogManager.GetLogger<OrderPlacedHandler>();
+        logger.LogInformation("Received OrderPlaced, OrderId = {orderId} - Charging credit card...", message.OrderId);
 
-        public Task Handle(OrderPlaced message, IMessageHandlerContext context)
+        var orderBilled = new OrderBilled
         {
-            log.Info($"Received OrderPlaced, OrderId = {message.OrderId} - Charging credit card...");
-
-            var orderBilled = new OrderBilled
-            {
-                OrderId = message.OrderId
-            };
-            return context.Publish(orderBilled);
-        }
+            OrderId = message.OrderId
+        };
+        return context.Publish(orderBilled);
     }
 }
