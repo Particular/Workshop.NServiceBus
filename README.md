@@ -5,7 +5,6 @@
 If you have any difficulty preparing your machine, or following this document, please raise an issue in this repository ASAP so that we can resolve the problem before the workshop begins.
 
 - [Preparing your machine for the workshop](#preparing-your-machine-for-the-workshop)
-- [Running the exercise solutions](#running-the-exercise-solutions)
 - [Demos](#demos)
 - [FAQ](#faq)
 
