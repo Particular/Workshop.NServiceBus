@@ -24,8 +24,8 @@ Refactor all endpoints to use to a shared configuration class by:
     <PackageReference Include="NServiceBus.SagaAudit" Version="5.*" />
 1. Add the `exercises/09/after/Shared/SharedConventions.cs` to the project
 1. Add a reference to the shared project to ClientUI, Sales, Billing and Shipping
-1. Update all endpoints configure the endpoint using `builder.ConfigureWorkshopEndpoint(endpointName, "host=localhost");`
-  - NOTE: Routing needs to be configured for the `ClientUI` using `builder.ConfigureWorkshopEndpoint(endpointName, "host=localhost", c => c.Routing.RouteToEndpoint(typeof(PlaceOrder), "Sales"));`
+1. Update all endpoints configure the endpoint using `builder.ConfigureWorkshopEndpoint(endpointName);`
+  - NOTE: Routing needs to be configured for the `ClientUI` using `builder.ConfigureWorkshopEndpoint(endpointName, c => c.Routing.RouteToEndpoint(typeof(PlaceOrder), "Sales"));`
 
 ## Exercise 9.2
 
@@ -37,7 +37,7 @@ Start the platform
 
 ### Step 2
 
-Start the platform either using SQL Server or RabbitMQ by executing `docker compose up -d` in `/docker/platform-rabbitmq` (or `/docker/platform-sql` if you want to use SQL server)
+Start the platform either using SQL Server or RabbitMQ by executing `docker compose up -d` in `/docker/platform-rabbitmq`.
 
 ### Step 3
 

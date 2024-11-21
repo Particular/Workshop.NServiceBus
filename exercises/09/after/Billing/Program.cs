@@ -9,7 +9,7 @@ Console.Title = endpointName;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.ConfigureWorkshopEndpoint(endpointName, "host=localhost");
+builder.ConfigureWorkshopEndpoint(endpointName);
 
 builder.Services.AddSingleton<OrderCalculator>();
 
