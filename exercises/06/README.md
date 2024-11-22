@@ -53,7 +53,7 @@ Make sure that you are not throwing any exceptions in Sales->PlaceOrderHandler f
 
 ## Step 6
 
-Now we are ready to build and publish Sales, Billng and Shipping to our local docker registry. 
+Now we are ready to build and publish Sales, Billing and Shipping to our local docker registry. 
 
 Execute the following command in the same folder as `RetailDemo.sln`
 

@@ -9,7 +9,7 @@ Console.Title = endpointName;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.ConfigureWorkshopEndpoint(endpointName, "host=localhost", c => c.Routing.RouteToEndpoint(typeof(PlaceOrder), "Sales"));
+builder.ConfigureWorkshopEndpoint(endpointName, c => c.Routing.RouteToEndpoint(typeof(PlaceOrder), "Sales"));
 
 builder.Services.AddHostedService<InputLoopService>();
 

@@ -4,11 +4,11 @@ public record Customizations(EndpointConfiguration EndpointConfiguration, Routin
 
 public static class SharedConventions
 {
-    public static HostApplicationBuilder ConfigureWorkshopEndpoint(this HostApplicationBuilder builder, string endpointName, string connectionString, Action<Customizations>? customize = null)
+    public static HostApplicationBuilder ConfigureWorkshopEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
     {
         var endpointConfiguration = new EndpointConfiguration(endpointName);
 
-        var transport = new RabbitMQTransport(RoutingTopology.Conventional(QueueType.Quorum), connectionString);
+        var transport = new RabbitMQTransport(RoutingTopology.Conventional(QueueType.Quorum), "host=localhost");
         var routing = endpointConfiguration.UseTransport(transport);
 
          endpointConfiguration.UsePersistence<LearningPersistence>();
