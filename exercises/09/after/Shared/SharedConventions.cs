@@ -4,7 +4,7 @@ public record Customizations(EndpointConfiguration EndpointConfiguration, Routin
 
 public static class SharedConventions
 {
-    public static HostApplicationBuilder ConfigureWorkshopEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations>? customize = null)
+    public static HostApplicationBuilder ConfigureWorkshopEndpoint(this HostApplicationBuilder builder, string endpointName, Action<Customizations> customize = null)
     {
         var endpointConfiguration = new EndpointConfiguration(endpointName);
 

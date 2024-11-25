@@ -85,7 +85,7 @@ Use the following commands to see what Sales, Billing and Shipping are doing.
 
 ### Removing containers
 
-Use: `docker compose rm -sf` to stop and remove all images to start fresh. 
+Use: `docker compose down` to stop and remove the containers. 
 
 ### License issues
 
