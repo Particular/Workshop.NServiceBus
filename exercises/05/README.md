@@ -35,7 +35,7 @@ Start the solution and send a message. Notice that Sales now fails to process th
 
 ### Step 3
 
-Add xml as an additional serializer.
+Add xml as an additional de-serializer to Sales.
 
 ### Step 4
 
