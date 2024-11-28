@@ -12,7 +12,7 @@ In this exercise you'll learn:
 - Make the process compatible with automated deployments
 - Host endpoints in Docker
 
-In this execise we will deploy Sales, Billing and Shipping to docker but keep the ClientUI running locally so that we can easier interact with it via the console.
+In this exercise we will deploy Sales, Billing and Shipping to docker but keep the ClientUI running locally so that we can easier interact with it via the console.
 
 ## Step 1
 
@@ -32,7 +32,7 @@ Since the learning transport uses the local filesystem for messages we need to c
 
 For ClientUI, Sales, Billing and Shipping
 
-1. Reference `NServiceBus.RabbitMQ`
+1. Install the `NServiceBus.RabbitMQ` package
 1. `endpointConfiguration.UseTransport(new LearningTransport());`with `endpointConfiguration.UseTransport(new RabbitMQTransport(RoutingTopology.Conventional(QueueType.Quorum), "host=rabbitmq"));`
   - For the ClientUI use "host=localhost" as the connection string, we will talk more about why later.
 1. Add `endpointConfiguration.EnableInstallers()` to enable queues to be created automatically. NOTE: This is not recommended for production
