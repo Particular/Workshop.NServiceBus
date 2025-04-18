@@ -16,7 +16,7 @@ NOTE: Alternatively you can also use the `NServiceBus.MessageInterfaces` as desc
 
 ## Exercise 5.2: Support multiple wire formats
 
-A system may have to deal with multiple wire formats. This may be required when evolving legacy systems or to connect multiple sub-systes.
+A system may have to deal with multiple wire formats. This may be required when evolving legacy systems or to connect multiple sub-systems.
 
 The following documentation can be used to help implement the solution.
 
@@ -27,7 +27,7 @@ The following documentation can be used to help implement the solution.
 
 ### Step 1
 
-Change ClientUI to use xml to seralize messages.
+Change ClientUI to use xml to serialize messages.
 
 ### Step 2
 
