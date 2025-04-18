@@ -63,7 +63,7 @@ Retry failed messages via ServicePulse
 
 ### Step 1
 
-Simulate monitoring the Maple and Alphine shipping partners in the Shipping endpoints by adding a [Custom Check](https://docs.particular.net/monitoring/custom-checks/) for each one of them.
+Simulate monitoring the Maple and Alpine shipping partners in the Shipping endpoints by adding a [Custom Check](https://docs.particular.net/monitoring/custom-checks/) for each one of them.
 
 ### Step 2
 
@@ -71,7 +71,7 @@ Run the endpoints and open *ServicePulse*. Verify how the custom check is report
 
 ### Step 3
 
-Simulate that Maple failes on even minutes and see how the status changes in ServicePulse.
+Simulate that Maple fails on even minutes and see how the status changes in ServicePulse.
 
 ## Exercise 9.4
 
@@ -81,5 +81,5 @@ Setup *ServiceInsight* as instructed on the [Readme of the repo](https://github.
 
 ### Step 2
 
-1. Check out sequence diagram view to vizualize the flow of messages from ClientUI all the way to shipping
+1. Check out sequence diagram view to visualize the flow of messages from ClientUI all the way to shipping
 1. Go to the saga view and check the state of some of the active sagas.

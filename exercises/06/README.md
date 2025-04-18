@@ -40,7 +40,7 @@ For ClientUI, Sales, Billing and Shipping
 
 ## Step 4
 
-Since containers by default have no storage accecible to them we need to write the NServiceBus diagnostics file to a different location. For now add the following line to Sales, Billing and Shipping:
+Since containers by default have no storage accessible to them we need to write the NServiceBus diagnostics file to a different location. For now add the following line to Sales, Billing and Shipping:
 
 
 `endpointConfiguration.CustomDiagnosticsWriter((_, __) => Task.CompletedTask);`
@@ -49,7 +49,7 @@ This tells NServiceBus to skip writing any diagnostics on startup.
 
 ## Step 5
 
-Make sure that you are not throwing any exceptions in Sales->PlaceOrderHandler from previous excercises.
+Make sure that you are not throwing any exceptions in Sales->PlaceOrderHandler from previous exercises.
 
 ## Step 6
 

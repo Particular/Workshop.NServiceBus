@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+env:
+  DOTNET_NOLOGO: true
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-2022
+            name: Windows
+          - os: ubuntu-24.04
+            name: Linux
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build exercise 06 - after
+        run: dotnet build exercises/06/after --configuration Release
+      - name: Build exercise 07 - after
+        run: dotnet build exercises/07/after --configuration Release
+      - name: Build exercise 09 - after
+        run: dotnet build exercises/09/after --configuration Release

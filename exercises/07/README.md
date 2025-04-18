@@ -60,7 +60,7 @@ The resulting code logs when it's ignoring a message, or logs that the message w
 
 ### Step 5
 
-- Do the same for `Billing.StrategicCustomer`, but now ignore all messsages that were placed by regular customers.
+- Do the same for `Billing.StrategicCustomer`, but now ignore all messages that were placed by regular customers.
 
 ### Step 6
 

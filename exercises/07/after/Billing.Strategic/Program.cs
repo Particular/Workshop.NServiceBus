@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using NServiceBus.Logging;
-using Shared.Configuration;
+using Shared;
 
 var log = LogManager.GetLogger<Program>();
 
