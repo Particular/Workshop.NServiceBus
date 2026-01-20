@@ -29,14 +29,11 @@ The following frameworks need to be installed:
 - .NET 8
 - Docker
 
-#### ServiceInsight
+#### ServicePulse
 
-The Particular Service Platform includes ServiceControl, ServicePulse and ServiceInsight.
+The Particular Service Platform includes ServiceControl, ServicePulse.
 
 The samples include a platform connection package that will fire up both ServiceControl and ServicePulse, without requiring any installation.
-
-In order to try out ServiceInsight, an installation is required. The latest version can be downloaded [from GitHub](https://github.com/Particular/ServiceInsight/releases/latest). Once installed, ServiceInsight needs to be connected to ServiceControl. 
-To do so, click the "Connect" button at the top left of the screen, and enter the ServiceControl URL. You can find the correct URL in ServicePulse, which shows a status bar with the ServiceControl information. Hovering over that, will expose the ServiceControl API URL. 
 
 ### Get a copy of this repository
 
